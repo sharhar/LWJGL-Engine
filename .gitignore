@@ -12,6 +12,6 @@ hs_err_pid*
 
 .metadata
 .recommenders
-.project
-.classpath
-.settings
+ludumdaregame/.project
+ludumdaregame/.classpath
+ludumdaregame/.settings
