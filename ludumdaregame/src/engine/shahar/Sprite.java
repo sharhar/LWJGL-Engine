@@ -1,5 +1,5 @@
 package engine.shahar;
 
-public class Shahar {
+public class Sprite {
 
 }
