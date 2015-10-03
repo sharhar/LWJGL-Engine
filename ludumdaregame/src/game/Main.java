@@ -1,12 +1,16 @@
 package game;
 
 import engine.Game;
-import engine.Loop;
+import engine.graphics.BasicRenderer;
+import engine.window.Loop;
 
 public class Main implements Loop{
 	
+	int x = 0;
+	
 	public void run() {
-		
+		BasicRenderer.renderRect(100,  100,  200,  200,  x);
+		x++;
 	}
 	
 	public Main() {

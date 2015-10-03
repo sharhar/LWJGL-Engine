@@ -15,5 +15,8 @@ hs_err_pid*
 ludumdaregame/.project
 ludumdaregame/.classpath
 ludumdaregame/.settings
+spritecreationgui/.project
+spritecreationgui/.classpath
+spritecreationgui/.settings
 
 .DS_Store

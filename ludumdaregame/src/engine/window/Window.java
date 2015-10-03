@@ -1,4 +1,4 @@
-package engine;
+package engine.window;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;

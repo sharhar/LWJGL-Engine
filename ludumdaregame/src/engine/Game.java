@@ -1,5 +1,8 @@
 package engine;
 
+import engine.window.Loop;
+import engine.window.Window;
+
 public class Game implements Runnable{
 	
 	private static Game g = null;
