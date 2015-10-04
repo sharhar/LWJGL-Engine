@@ -36,6 +36,8 @@ public class Sound {
 		alSourcei(ID, AL_BUFFER, buffer.get(0));
 		alSource3f(ID, AL_POSITION, pos.x,pos.y,pos.z);
 		alSource3f(ID, AL_VELOCITY, 0,0,0);
+		
+		SoundManager.addSound(this);
 	}
 	
 	public void volUp(float amount) {
@@ -49,6 +51,7 @@ public class Sound {
 	}
 	
 	public void destroy() {
+		stop();
 		alDeleteSources(ID);
 		alDeleteBuffers(bufferID);
 	}
