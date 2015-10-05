@@ -26,19 +26,14 @@ public class Window {
 			Display.create();
 			Mouse.create();
 			Keyboard.create();
+			//fix white border
+			Display.setDisplayMode(new DisplayMode(width, height));
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
 		
 		Display.setResizable(true);
 		Display.setVSyncEnabled(false);
-		
-		//fix white border
-		try {
-			Display.setDisplayMode(new DisplayMode(width, height));
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
 		
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_PROJECTION);

@@ -9,6 +9,7 @@ import engine.graphics.Texture;
 import engine.input.KeyInput;
 import engine.objects.Sprite;
 import engine.sound.Sound;
+import engine.time.Clock;
 import engine.window.Loop;
 import engine.window.Window;
 
@@ -16,11 +17,15 @@ public class Main implements Loop{
 	
 	Sprite test;
 	Sound sound;
+	Clock clock;
+	Clock clock2;
 	float x = 0;
 	
 	public void run() {
 		x++;
 		BasicRenderer.drawString(100,  100, "Rotation of image(angles): " + x, 40);
+		BasicRenderer.drawString(70,  60, "Amount of time passed since start of app: " + clock.getTimePassed().getAsSeconds(), 30);
+		BasicRenderer.drawString(70,  20, "Have 5 seconds passed yet? " + clock2.isDone(), 30);
 		if(KeyInput.isKeyPressed(Keyboard.KEY_SPACE)) {
 			sound.toggle();
 		}
@@ -41,6 +46,10 @@ public class Main implements Loop{
 		test = new Sprite(100, 300, 200, 200, 0, new Texture("/test.png"));
 		sound = new Sound("BM.wav");
 		sound.play();
+		clock = new Clock();
+		clock2 = new Clock();
+		clock.startCountUp();
+		clock2.startCountDown(5);
 		Game.start();
 	}
 	
