@@ -1,5 +1,7 @@
 package engine;
 
+import engine.graphics.MasterRenderer;
+import engine.input.KeyInput;
 import engine.window.Loop;
 import engine.window.Window;
 
@@ -24,7 +26,9 @@ public class Game{
 	public static void run() {
 		while(!Window.isClosed()) {
 			Window.clear();
+			KeyInput.update();
 			loop.run();
+			MasterRenderer.renderScene();
 			Window.update();
 		}
 		destroy();

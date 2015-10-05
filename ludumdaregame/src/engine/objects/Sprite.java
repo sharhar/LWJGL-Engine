@@ -21,4 +21,8 @@ public class Sprite implements Renderable{
 	public void render() {
 		BasicRenderer.renderRect(x, y, width, height, rot, tex);
 	}
+
+	public void masterRender() {
+		BasicRenderer.masterRender(x, y, width, height, rot);
+	}
 }
