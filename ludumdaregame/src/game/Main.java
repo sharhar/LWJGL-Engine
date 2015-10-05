@@ -11,7 +11,6 @@ import engine.objects.Sprite;
 import engine.sound.Sound;
 import engine.time.Clock;
 import engine.window.Loop;
-import engine.window.Window;
 
 public class Main implements Loop{
 	
@@ -40,8 +39,7 @@ public class Main implements Loop{
 	}
 	
 	public Main() {
-		Game.init("Game Title", 800, 600, this);
-		Window.setIcon("/Icon.png");
+		Game.init("Game Title", 800, 600,true, "/Icon.png", this);
 		
 		test = new Sprite(100, 300, 200, 200, 0, new Texture("/test.png"));
 		sound = new Sound("BM.wav");
