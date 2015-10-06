@@ -1,27 +1,12 @@
 package engine.window;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Canvas;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -38,6 +23,7 @@ public class Window {
 	public static Canvas canvas;
 	
 	public static boolean closed = false;
+	public static boolean resized = false;
 	
 	public static void create(String title, int width, int height) {
 		create(title,width,height,false,null);
@@ -71,6 +57,31 @@ public class Window {
 		        public void windowClosing(WindowEvent event) {
 		            closed = true;
 		        }
+		    });
+		    
+		    frame.addComponentListener(new ComponentListener() {
+		        @Override
+		    	public void componentResized(ComponentEvent e) {
+		            resized = true;       
+		        }
+
+				@Override
+				public void componentHidden(ComponentEvent arg0) {
+					
+					
+				}
+
+				@Override
+				public void componentMoved(ComponentEvent arg0) {
+					
+					
+				}
+
+				@Override
+				public void componentShown(ComponentEvent arg0) {
+					
+					
+				}
 		    });
 			
 			frame.setTitle(title);
@@ -110,36 +121,6 @@ public class Window {
 		return Display.getWidth();
 	}
 	
-	public static void setIcon(String path) {
-		BufferedImage icon = null;
-		try {
-			icon = ImageIO.read(Window.class.getResourceAsStream(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-		
-		setIcon(icon);
-	}
-	
-	public static void setIcon(BufferedImage icon) {
-		ByteBuffer buffer = convertImageData(icon);
-		ByteBuffer[] buffers = new ByteBuffer[1];
-		buffers[0] = buffer;
-		Display.setIcon(buffers);
-	}
-	
-	private static ByteBuffer convertImageData(BufferedImage bi) {
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    try {
-	        ImageIO.write(bi, "png", out);
-	        return ByteBuffer.wrap(out.toByteArray());
-	    } catch (IOException ex) {
-	        ex.printStackTrace();
-	    }
-	    return null;
-	}
-	
 	public static String getTitle() {
 		return Display.getTitle();
 	}
@@ -153,6 +134,10 @@ public class Window {
 	}
 	
 	public static void update() {
+		if(resized) {
+			glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			resized = false;
+		}
 		Display.update();
 		Display.sync(120);
 	}
