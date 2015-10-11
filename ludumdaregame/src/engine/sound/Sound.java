@@ -61,6 +61,7 @@ public class Sound {
 	
 	public void setVolume(float vol) {
 		volume = vol;
+		alSourcef(ID, AL_GAIN, volume);
 	}
 	
 	public void volUp(float amount) {

@@ -27,7 +27,7 @@ public class MasterRenderer {
 	}
 	
 	public static void addSprite(Sprite sprite) {
-		addRenderable(sprite.tex.ID, sprite);
+		addRenderable(sprite.shape.ID, sprite);
 	}
 	
 	public static void addRenderable(int ID, Renderable renderable) {

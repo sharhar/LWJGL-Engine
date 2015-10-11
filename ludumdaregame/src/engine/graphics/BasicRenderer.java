@@ -2,19 +2,21 @@ package engine.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import engine.graphics.font.FontManager;
 
 public class BasicRenderer {
-	
+
 	public static void drawString(float x, float y, String text, float scale) {
-		FontManager.drawString(x, y, text, scale/46.0f);
+		FontManager.drawString(x, y, text, scale / 46.0f);
 	}
-	
-	public static void renderRect(float x, float y, float w, float h, float r, Texture tex) {
-		renderRect(x, y, w, h, r, tex.ID);
+
+	public static void renderRect(float x, float y, float w, float h, float r, Texture tex, Color c) {
+		renderRect(x, y, w, h, r, tex.ID,c);
 	}
-	
-	public static void masterRender(float x, float y, float w, float h, float r) {
+
+	public static void masterRenderRect(float x, float y, float w, float h, float r) {
 		glPushMatrix();
 
 		float W = w / 2;
@@ -22,7 +24,7 @@ public class BasicRenderer {
 
 		glTranslatef(x + W, y + H, 0);
 		glRotatef(r, 0, 0, 1);
-		
+
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(1, 1);
@@ -39,7 +41,7 @@ public class BasicRenderer {
 		glPopMatrix();
 	}
 
-	public static void renderRect(float x, float y, float w, float h, float r, int texID) {
+	public static void renderRect(float x, float y, float w, float h, float r, int texID, Color c) {
 		glPushMatrix();
 
 		float W = w / 2;
@@ -48,7 +50,9 @@ public class BasicRenderer {
 		glTranslatef(x + W, y + H, 0);
 		glRotatef(r, 0, 0, 1);
 		
-		if(texID != 0) {
+		glColor3f(c.r, c.g, c.b);
+
+		if (texID != 0) {
 			glBindTexture(GL_TEXTURE_2D, texID);
 		}
 		glBegin(GL_QUADS);
@@ -67,14 +71,37 @@ public class BasicRenderer {
 				glVertex2f(W, H);
 				glVertex2f(-W, H);
 				glVertex2f(-W, -H);
-				
-				
+
 			}
 		}
 		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
+
+		if (texID != 0) {
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		
+		glColor3f(1, 1, 1);
 
 		glPopMatrix();
 	}
 
+	public static void renderCircle(float x, float y, float r, Vector2f[] verts, Color c) {
+		glPushMatrix();
+
+		glTranslatef(x, y, 0);
+		
+		glColor3f(c.r, c.g, c.b);
+
+		glBegin(GL_POLYGON);
+		{
+			for (Vector2f v:verts) {
+				glVertex2f(v.x * r, v.y * r);
+			}
+		}
+		glEnd();
+		
+		glColor3f(1, 1, 1);
+
+		glPopMatrix();
+	}
 }

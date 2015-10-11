@@ -1,28 +1,28 @@
 package engine.objects;
 
-import engine.graphics.BasicRenderer;
+import org.lwjgl.util.vector.Vector2f;
+
 import engine.graphics.Renderable;
-import engine.graphics.Texture;
+import engine.objects.shapes.Shape;
 
 public class Sprite implements Renderable{
 	
-	public float x, y, width, height, rot;
-	public Texture tex;
+	public Shape shape;
 	
-	public Sprite(float x, float y , float w, float h, float r, Texture tex) {
-		this.x = x;
-		this.y = y;
-		this.width = w;
-		this.height = h;
-		this.rot = r;
-		this.tex = tex;
+	public Sprite(Shape shape) {
+		this.shape = shape;
+	}
+	
+	public void move(Vector2f move) {
+		shape.pos.x += move.x;
+		shape.pos.y += move.y;
 	}
 	
 	public void render() {
-		BasicRenderer.renderRect(x, y, width, height, rot, tex);
+		shape.render();
 	}
 
 	public void masterRender() {
-		BasicRenderer.masterRender(x, y, width, height, rot);
+		shape.render();
 	}
 }
