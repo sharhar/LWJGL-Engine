@@ -32,7 +32,7 @@ public class ShapeRect extends Shape{
 		}
 		
 		Vector2f center = new Vector2f(pos.x + other[0].x/2, pos.y + other[0].y/2);
-		
+		 
 		colVert[0] = Maths.rotVec(new Vector2f(pos.x, pos.y), center, r);
 		colVert[1] = Maths.rotVec(new Vector2f(pos.x + other[0].x, pos.y), center, r);
 		colVert[2] = Maths.rotVec(new Vector2f(pos.x + other[0].x, pos.y + other[0].y), center, r);
