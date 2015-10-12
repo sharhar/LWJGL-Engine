@@ -4,8 +4,12 @@ import org.lwjgl.input.Keyboard;
 
 public class KeyInput {
 	
-	public static boolean[] keys = new boolean[256];
-	public static boolean[] past_keys = new boolean[256];
+	public static final int KEY_NUM = 256;
+	
+	
+	
+	public static boolean[] keys = new boolean[KEY_NUM];
+	public static boolean[] past_keys = new boolean[KEY_NUM];
 	
 	public static void update() {
 		for(int i = 0;i < past_keys.length;i++) {

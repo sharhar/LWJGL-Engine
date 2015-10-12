@@ -27,17 +27,28 @@ public class ShapeRect extends Shape{
 	}
 	
 	public void updateCol() {
-		if(colCalcPos.x == pos.x && colCalcPos.y == pos.y) {
+		if(colCalcPos.x == pos.x && colCalcPos.y == pos.y && r == colCalcR) {
 			return;
 		}
 		
 		Vector2f center = new Vector2f(pos.x + other[0].x/2, pos.y + other[0].y/2);
-		 
+		
 		colVert[0] = Maths.rotVec(new Vector2f(pos.x, pos.y), center, r);
 		colVert[1] = Maths.rotVec(new Vector2f(pos.x + other[0].x, pos.y), center, r);
 		colVert[2] = Maths.rotVec(new Vector2f(pos.x + other[0].x, pos.y + other[0].y), center, r);
 		colVert[3] = Maths.rotVec(new Vector2f(pos.x, pos.y + other[0].y), center, r);
 		
 		colCalcPos = new Vector2f(pos.x, pos.y);
+		colCalcR = r;
+	}
+
+	
+	public float getCalcR() {
+		float R = r;
+		
+		if(R < 0)
+			R = 360+R;
+		
+		return R%360;
 	}
 }

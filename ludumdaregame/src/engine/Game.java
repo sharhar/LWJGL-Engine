@@ -27,6 +27,10 @@ public class Game{
 		run();
 	}
 	
+	public static void close() {
+		Window.closed = true;
+	}
+	
 	public static void run() {
 		while(!Window.isClosed()) {
 			Window.clear();

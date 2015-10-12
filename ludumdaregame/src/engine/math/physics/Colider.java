@@ -2,12 +2,55 @@ package engine.math.physics;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import engine.math.Maths;
 import engine.objects.shapes.Shape;
 
 public class Colider {
 
-	public static boolean isShapeHitting(Shape s1, Shape s2) {
-		return false;
+	public static boolean shapeShapeCol(Shape s1, Shape s2) {
+		if(s1.shapeType.equals("Rect") && s2.shapeType.equals("Rect") && s1.r == 0 && s2.r == 0) {
+			return rectRectCol(s1, s2);
+		} else if(s1.shapeType.equals("Cir") && s2.shapeType.equals("Cir")) {
+			return cirCirCol(s1, s2);
+		} else if(s1.shapeType.equals("Cir") && s2.shapeType.equals("Rec") && s2.r == 0) {
+			return rectCirCol(s2, s1);
+		} else if(s1.shapeType.equals("Rec") && s2.shapeType.equals("Cir") && s1.r == 0) {
+			return rectCirCol(s1, s2);
+		}
+		
+		return polygonCol(s1, s2);
+	}
+	
+	public static boolean rectCirCol(Shape r, Shape c) {
+		Vector2f close = Maths.getPointClosestToInRect(r, c.pos);
+		
+		float d = Maths.distance(close, c.pos);
+		
+		return d <= c.r;
+	}
+	
+	public static boolean cirCirCol(Shape s1, Shape s2) {
+		float d = Maths.distance(s1.pos, s2.pos);
+		float r = s1.r + s2.r;
+		
+		return d <= r;
+	}
+	
+	public static boolean rectRectCol(Shape sh1, Shape sh2) {
+		Vector2f p1 = sh1.pos;
+		Vector2f p2 = sh2.pos;
+		Vector2f s1 = sh1.other[0];
+		Vector2f s2 = sh2.other[0];
+		
+		if(p1.x + s1.x< p2.x || p2.x + s2.x < p1.x) {
+			return false;
+		}
+		
+		if(p1.y + s1.y < p2.y || p2.y + s2.y < p1.y) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	public static boolean polygonCol(Shape s1, Shape s2) {

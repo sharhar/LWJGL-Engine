@@ -45,4 +45,8 @@ public class ShapeCircle extends Shape{
 		
 		colCalcPos = new Vector2f(pos.x, pos.y);
 	}
+
+	public float getCalcR() {
+		return r;
+	}
 }
