@@ -97,26 +97,10 @@ public class Renderer {
 		glTranslatef(shape.pos.x, shape.pos.y, 0);
 		glRotatef(shape.rot, 0, 0, 1);
 		
-		Vector2f first = null;
-		Vector2f second = null;
-		
-		glBegin(GL_TRIANGLES);
+		glBegin(GL_POLYGON);
 		{
 			for(int i = 0;i < shape.vecs.size();i++) {
-				if(i == 0) {
-					first = shape.vecs.get(i);
-				} else if(i == 1) {
-					second = shape.vecs.get(i);
-				} else {
-					Vector2f v = shape.vecs.get(i);
-					
-					glVertex2f(first.x, first.y);
-					glVertex2f(second.x, second.y);
-					glVertex2f(v.x, v.y);
-					
-					first = second;
-					second = v;
-				}
+				glVertex2f(shape.vecs.get(i).x, shape.vecs.get(i).y);
 			}
 		}
 		glEnd();

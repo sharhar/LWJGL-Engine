@@ -6,10 +6,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 
 public class Window extends JFrame {
 	private static final long serialVersionUID = -57124330276627930L;
@@ -34,6 +38,22 @@ public class Window extends JFrame {
 		mnFile.add(mntmNewProject);
 		
 		JMenuItem mntmOpenProject = new JMenuItem("Open Project");
+		mntmOpenProject.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				if(chooser.showOpenDialog(Window.this) == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					
+					try {
+						Main.imageBuffer = ImageIO.read(file);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+					Main.readImage = true;
+				}
+			}
+		});
 		mnFile.add(mntmOpenProject);
 		
 		JMenuItem mntmSaveProject = new JMenuItem("Save Project");
