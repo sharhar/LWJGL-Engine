@@ -6,6 +6,8 @@ import engine.objects.shapes.Shape;
 
 public class Maths {
 	
+	public static float PI = getPi();
+	
 	public static Vector2f getPointClosestToInRect(Shape s, Vector2f p) {
 		if(!s.shapeType.equals("Rect")) {
 			System.err.println("Shape " + s + " is not a rectangle!");
@@ -38,6 +40,67 @@ public class Maths {
 	
 	public static float pythagorean(float a, float b) {
 		return (float) Math.sqrt(a*a + b*b);
+	}
+	
+	private static float getPi() {
+		float acc = 3;
+		
+		boolean done = false;
+		
+		for(int i = 1;!done;i++) {
+			float prev = acc;
+			
+			acc += (((4.0)/((i*2.0) * ((i*2.0) + 1) * (2.0 * (i + 1)))) * (((i%2) * 2) - 1));
+			if(prev == acc) {
+				done = true;
+			}
+		}
+		
+		return acc;
+	}
+	
+	public static float toRadians(float a) {
+		return (a%360)/180.0f * PI;
+	}
+	
+	public static float cos(float a) {
+		return sin(a + 90);
+	}
+	
+	public static int sign(float n) {
+		if(n > 0) {
+			return 1;
+		} else if (n < 0) {
+			return -1;
+		}
+		
+		return 0;
+	}
+	
+	public static float sin(float a) {
+		float x = toRadians(a);
+		
+		float sin = 0;
+		if (x < 0)
+		{
+		    sin = 1.27323954f * x + 0.405284735f * x * x;
+		    
+		    if (sin < 0)
+		        sin = 0.225f * (sin *-sin - sin) + sin;
+		    else
+		        sin = 0.225f * (sin * sin - sin) + sin;
+		}
+		else
+		{
+		    sin = 1.27323954f * x - 0.405284735f * x * x;
+		    
+		    if (sin < 0)
+		        sin = 0.225f * (sin *-sin - sin) + sin;
+		    else
+		        sin = 0.225f * (sin * sin - sin) + sin;
+		}
+		
+		return sin;
 	}
 	
 	public static Vector2f rotVec(Vector2f vec, Vector2f origin, float theta) {

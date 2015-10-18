@@ -59,7 +59,7 @@ public class Main implements Loop {
 			currentBallSpeed = getSpeed(currentBallSpeed, paddel1.shape, 1);
 			currentBallSpeed.x = Math.abs(currentBallSpeed.x);
 		} else if (Colider.shapeShapeCol(ball.shape, paddel2.shape)) {
-			currentBallSpeed = getSpeed(currentBallSpeed, paddel1.shape, 1);
+			currentBallSpeed = getSpeed(currentBallSpeed, paddel1.shape, -1);
 			currentBallSpeed.x = -Math.abs(currentBallSpeed.x);
 			currentBallSpeed.y = -(currentBallSpeed.y);
 		}
@@ -131,6 +131,8 @@ public class Main implements Loop {
 
 	public static void main(String[] args) {
 		new Main();
+		
+		
 	}
 
 	public Vector2f getSpeed(Vector2f speed, Shape s, int x) {
