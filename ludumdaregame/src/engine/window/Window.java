@@ -7,10 +7,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -47,13 +49,16 @@ public class Window {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setLocationRelativeTo(null);
 			
-			if(iconPath != null) {
+			try {
 				frame.setIconImage(ImageIO.read(Window.class.getResourceAsStream(iconPath)));
+			} catch (Exception e) {
+				System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYY");
+				e.printStackTrace();
 			}
 			
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		    frame.addWindowListener(new WindowAdapter() {
-		        @Override
+		        @Override 
 		        public void windowClosing(WindowEvent event) {
 		            closed = true;
 		        }
@@ -92,7 +97,7 @@ public class Window {
 			Keyboard.create();
 			//fix white border
 			//Display.setDisplayMode(new DisplayMode(width, height));
-		} catch (Exception e) {
+		} catch (LWJGLException e) {
 			System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 			e.printStackTrace();
 		}
