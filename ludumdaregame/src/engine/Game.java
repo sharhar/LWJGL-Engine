@@ -2,6 +2,7 @@ package engine;
 
 import engine.graphics.MasterRenderer;
 import engine.input.KeyInput;
+import engine.time.Time;
 import engine.window.Loop;
 import engine.window.Window;
 
@@ -32,8 +33,10 @@ public class Game{
 	}
 	
 	public static void run() {
+		Time.init();
 		while(!Window.isClosed()) {
 			Window.clear();
+			Time.tick();
 			KeyInput.update();
 			loop.run();
 			MasterRenderer.renderScene();

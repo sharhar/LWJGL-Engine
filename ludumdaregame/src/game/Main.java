@@ -22,25 +22,22 @@ public class Main implements Loop {
 	Paddel paddel2;
 	Ball ball;
 	Sound sound;
-
 	int p1Score = 0;
 	int p2Score = 0;
-
 	float paddelSpeed = 5;
-
 	float ballSpeed = 3;
-
 	Vector2f currentBallSpeed = new Vector2f(ballSpeed, ballSpeed);
+	int width = 0;
+	int height = 0;
 
 	public void run() {
-		 input();
-		 tick();
-
+		input();
+		tick();
 		render();
 	}
 
 	public void render() {
-		BasicRenderer.drawString(Window.getWidth() / 2 - 35, Window.getHeight() - 50, p1Score + " | " + p2Score, 40);
+		BasicRenderer.drawString(width / 2 - 35, height - 50, p1Score + " | " + p2Score, 40);
 		MasterRenderer.addSprite(paddel1);
 		MasterRenderer.addSprite(paddel2);
 		MasterRenderer.addSprite(ball);
@@ -121,7 +118,10 @@ public class Main implements Loop {
 
 		paddel1 = new Paddel(30, Window.getHeight() / 2, 20, 150);
 		paddel2 = new Paddel(Window.getWidth() - 30 - 20, Window.getHeight() / 2, 20, 150);
-
+		
+		width = Window.getWidth();
+		height = Window.getHeight();
+		
 		ball = new Ball(400, 400, 15);
 		sound = new Sound("BM.wav");
 		sound.play();
@@ -131,8 +131,6 @@ public class Main implements Loop {
 
 	public static void main(String[] args) {
 		new Main();
-		
-		
 	}
 
 	public Vector2f getSpeed(Vector2f speed, Shape s, int x) {
