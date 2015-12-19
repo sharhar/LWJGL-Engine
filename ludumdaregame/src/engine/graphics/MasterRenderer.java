@@ -1,3 +1,7 @@
+/**
+ * A class that renders using a batch rendering technique
+ * @author Sharhar
+ */
 package engine.graphics;
 
 import java.util.ArrayList;
@@ -13,6 +17,9 @@ public class MasterRenderer {
 	
 	public static Map<Integer, List<Renderable>> renderables = new HashMap<Integer, List<Renderable>>();
 	
+	/**
+	 * This function renders the scene
+	 */
 	public static void renderScene() {
 		for(int ID:renderables.keySet()) {
 			List<Renderable> batch = renderables.get(ID);
@@ -26,10 +33,19 @@ public class MasterRenderer {
 		renderables.clear();
 	}
 	
+	/**
+	 * This function adds a sprite object to the sprite HashMap
+	 * @param sprite the object to be added
+	 */
 	public static void addSprite(Sprite sprite) {
 		addRenderable(sprite.shape.ID, sprite);
 	}
 	
+	/**
+	 * This function adds a Renderable to the sprite HashMap 
+	 * @param ID texture ID
+	 * @param renderable Renderable object
+	 */
 	public static void addRenderable(int ID, Renderable renderable) {
 		List<Renderable> batch = renderables.get(ID);
 		if(batch != null) {

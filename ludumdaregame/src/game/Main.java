@@ -29,7 +29,7 @@ public class Main implements Loop {
 	Vector2f currentBallSpeed = new Vector2f(ballSpeed, ballSpeed);
 	int width = 0;
 	int height = 0;
-
+	
 	public void run() {
 		input();
 		tick();
@@ -126,6 +126,7 @@ public class Main implements Loop {
 		sound = new Sound("BM.wav");
 		sound.play();
 		sound.setVolume(0);
+		
 		Game.start();
 	}
 

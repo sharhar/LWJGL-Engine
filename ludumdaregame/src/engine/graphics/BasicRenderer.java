@@ -1,3 +1,7 @@
+/**
+ * This class is used to render basic shapes and objects
+ * @author Sharhar
+ */
 package engine.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -8,14 +12,39 @@ import engine.graphics.font.FontManager;
 
 public class BasicRenderer {
 
+	/**
+	 * This function renders a string
+	 * @param x x position of string
+	 * @param y y position of string
+	 * @param text text to render
+	 * @param scale scale of the text
+	 */
 	public static void drawString(float x, float y, String text, float scale) {
 		FontManager.drawString(x, y, text, scale / 46.0f);
 	}
 
+	/**
+	 * This function renders a rectangle
+	 * @param x x position of rectangle
+	 * @param y y position of rectangle
+	 * @param w width of rectangle
+	 * @param h height of rectangle
+	 * @param r rotation of rectangle
+	 * @param tex texture of rectangle
+	 * @param c color of rectangle
+	 */
 	public static void renderRect(float x, float y, float w, float h, float r, Texture tex, Color c) {
 		renderRect(x, y, w, h, r, tex.ID,c);
 	}
 
+	/**
+	 * This function is used in MasterRenderer to render rectangles DO NOT USE!
+	 * @param x x position of rectangle
+	 * @param y y position of rectangle
+	 * @param w width of rectangle
+	 * @param h height of rectangle
+	 * @param r rotation of rectangle
+	 */
 	public static void masterRenderRect(float x, float y, float w, float h, float r) {
 		glPushMatrix();
 
@@ -41,6 +70,16 @@ public class BasicRenderer {
 		glPopMatrix();
 	}
 
+	/**
+	 * This function renders a rectangle
+	 * @param x x position of rectangle
+	 * @param y y position of rectangle
+	 * @param w width of rectangle
+	 * @param h height of rectangle
+	 * @param r rotation of rectangle
+	 * @param texID texture ID of rectangle
+	 * @param c color of rectangle
+	 */
 	public static void renderRect(float x, float y, float w, float h, float r, int texID, Color c) {
 		glPushMatrix();
 
@@ -85,6 +124,14 @@ public class BasicRenderer {
 		glPopMatrix();
 	}
 
+	/**
+	 * This function renders a circle
+	 * @param x x position of circle
+	 * @param y y position of circle
+	 * @param r radius of circle
+	 * @param verts vertices of circle
+	 * @param c color of circle
+	 */
 	public static void renderCircle(float x, float y, float r, Vector2f[] verts, Color c) {
 		glPushMatrix();
 

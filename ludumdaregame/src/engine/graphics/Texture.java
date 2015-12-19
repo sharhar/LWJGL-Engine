@@ -1,3 +1,7 @@
+/**
+ * A class used to manage openGL textures
+ * @author Sharhar
+ */
 package engine.graphics;
 
 import java.awt.image.BufferedImage;
@@ -14,18 +18,34 @@ public class Texture {
 	public int ID;
 	public BufferedImage img = null;
 	
+	/**
+	 * A basic constructor that creates the instance and nothing more
+	 */
 	public Texture() {
 		ID = 0;
 	}
 	
+	/**
+	 * This constructor uses a BufferedImage to create an OpenGL texture
+	 * @param image
+	 */
 	public Texture(BufferedImage image) {
 		ID = loadFromImage(image);
 	}
 	
+	/**
+	 * This constructor uses a path to an image to create the OpenGL texture
+	 * @param path
+	 */
 	public Texture(String path) {
 		ID = load(path);
 	}
 	
+	/**
+	 * This function creates an OpenGL texture from a BufferedImage
+	 * @param image the image to use
+	 * @return the ID of the OpenGl texture
+	 */
 	public int loadFromImage(BufferedImage image) {
 		int width = 0;
 		int height = 0;
@@ -58,6 +78,11 @@ public class Texture {
 		return tex;
 	}
 	
+	/**
+	 * This function loads an OpenGL texture from the image's path
+	 * @param path path to the image
+	 * @return the ID of the OpenGL image
+	 */
 	public int load(String path) {
 		int width = 0;
 		int height = 0;
@@ -94,10 +119,16 @@ public class Texture {
 		return tex;
 	}
 	
+	/**
+	 * This function binds the texture from OpenGL to use
+	 */
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
 	
+	/**
+	 * This function unbinds any texture from being used
+	 */
 	public static void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
