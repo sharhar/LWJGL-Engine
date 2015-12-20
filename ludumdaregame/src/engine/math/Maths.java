@@ -4,10 +4,23 @@ import org.lwjgl.util.vector.Vector2f;
 
 import engine.objects.shapes.Shape;
 
+/**
+ * A Math class to do Math
+ * @author Sharhar
+ */
 public class Maths {
 	
 	public static float PI = getPi();
+	public static float TAU = PI*2;
+	public static float PHI = (float) ((Math.sqrt(5)/2)+0.5);
+	public static float E = 2.718281828459045f;
 	
+	/**
+	 * This function is used the rectangle circle collision algorithm
+	 * @param s shape
+	 * @param p point
+	 * @return closest point in rectangle
+	 */
 	public static Vector2f getPointClosestToInRect(Shape s, Vector2f p) {
 		if(!s.shapeType.equals("Rect")) {
 			System.err.println("Shape " + s + " is not a rectangle!");
@@ -34,10 +47,22 @@ public class Maths {
 		return result;
 	}
 	
+	/**
+	 * This function calculates the distance between two points
+	 * @param p1 point 1
+	 * @param p2 point 2
+	 * @return the distance
+	 */
 	public static float distance(Vector2f p1, Vector2f p2) {
 		return pythagorean(p1.x - p2.x, p1.y - p2.y);
 	}
 	
+	/**
+	 * This function calculates the hypotenuse of the right triangle with side lengths a and b
+	 * @param a side a
+	 * @param b side b
+	 * @return length of side c
+	 */
 	public static float pythagorean(float a, float b) {
 		return (float) Math.sqrt(a*a + b*b);
 	}
@@ -59,14 +84,29 @@ public class Maths {
 		return acc;
 	}
 	
+	/**
+	 * this function converts degrees to radians
+	 * @param a degrees
+	 * @return radians
+	 */
 	public static float toRadians(float a) {
 		return (a%360)/180.0f * PI;
 	}
 	
+	/**
+	 * This function is a cosine approximation created to yield better trigonometry performance (STILL EXPIREMENTAL)
+	 * @param a degrees
+	 * @return cosine of degrees
+	 */
 	public static float cos(float a) {
-		return sin(a + 90);
+		return sin(90 - a);
 	}
 	
+	/**
+	 * This function returns the sign of a number
+	 * @param n number
+	 * @return sign of number
+	 */
 	public static int sign(float n) {
 		if(n > 0) {
 			return 1;
@@ -77,6 +117,11 @@ public class Maths {
 		return 0;
 	}
 	
+	/**
+	 * This function is a sine approximation created to yield better trigonometry performance (STILL EXPIREMENTAL)
+	 * @param a degrees
+	 * @return sine of degrees
+	 */
 	public static float sin(float a) {
 		float x = toRadians(a);
 		
@@ -103,6 +148,13 @@ public class Maths {
 		return sin;
 	}
 	
+	/**
+	 * This function rotates a Vector
+	 * @param vec vector to rotate
+	 * @param origin origin of rotation
+	 * @param theta angle to rotate by
+	 * @return rotated vector
+	 */
 	public static Vector2f rotVec(Vector2f vec, Vector2f origin, float theta) {
 		if(theta == 0) {
 			return vec;

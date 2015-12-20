@@ -1,7 +1,4 @@
-/**
- * A class used to manage openGL textures
- * @author Sharhar
- */
+
 package engine.graphics;
 
 import java.awt.image.BufferedImage;
@@ -12,7 +9,10 @@ import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
 
 import static org.lwjgl.opengl.GL11.*;
-
+/**
+ * A class used to manage openGL textures
+ * @author Sharhar
+ */
 public class Texture {
 	
 	public int ID;
@@ -27,7 +27,7 @@ public class Texture {
 	
 	/**
 	 * This constructor uses a BufferedImage to create an OpenGL texture
-	 * @param image
+	 * @param image the image to use
 	 */
 	public Texture(BufferedImage image) {
 		ID = loadFromImage(image);
@@ -35,7 +35,7 @@ public class Texture {
 	
 	/**
 	 * This constructor uses a path to an image to create the OpenGL texture
-	 * @param path
+	 * @param path the path of the image
 	 */
 	public Texture(String path) {
 		ID = load(path);

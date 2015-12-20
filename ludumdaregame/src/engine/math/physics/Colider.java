@@ -5,8 +5,19 @@ import org.lwjgl.util.vector.Vector2f;
 import engine.math.Maths;
 import engine.objects.shapes.Shape;
 
+/**
+ * This class handles collision calculations
+ * @author Sharhar
+ *
+ */
 public class Colider {
 
+	/**
+	 * This is a general function to check if any to shapes are colliding
+	 * @param s1 shape 1
+	 * @param s2 shape 2
+	 * @return whether the shapes are colliding
+	 */
 	public static boolean shapeShapeCol(Shape s1, Shape s2) {
 		if(s1.shapeType.equals("Rect") && s2.shapeType.equals("Rect") && s1.r == 0 && s2.r == 0) {
 			return rectRectCol(s1, s2);
@@ -21,6 +32,12 @@ public class Colider {
 		return polygonCol(s1, s2);
 	}
 	
+	/**
+	 * This function checks to see if a rectangle shape and a circle shape are colliding
+	 * @param r rectangle shape
+	 * @param c circle shape
+	 * @return whether they are colliding
+	 */
 	public static boolean rectCirCol(Shape r, Shape c) {
 		Vector2f close = Maths.getPointClosestToInRect(r, c.pos);
 		
@@ -29,6 +46,12 @@ public class Colider {
 		return d <= c.r;
 	}
 	
+	/**
+	 * This function checks if two circle shapes are colliding
+	 * @param s1 shape 1
+	 * @param s2 shape 2
+	 * @return whether they are colliding
+	 */
 	public static boolean cirCirCol(Shape s1, Shape s2) {
 		float d = Maths.distance(s1.pos, s2.pos);
 		float r = s1.r + s2.r;
@@ -36,6 +59,12 @@ public class Colider {
 		return d <= r;
 	}
 	
+	/**
+	 * This function checks if two rectangle shapes are colliding
+	 * @param sh1 shape 1
+	 * @param sh2 shape 2
+	 * @return whether they are colliding
+	 */
 	public static boolean rectRectCol(Shape sh1, Shape sh2) {
 		Vector2f p1 = sh1.pos;
 		Vector2f p2 = sh2.pos;
@@ -52,7 +81,13 @@ public class Colider {
 		
 		return true;
 	}
-
+	
+	/**
+	 * This function checks if two polygons are colliding
+	 * @param s1 shape 1
+	 * @param s2 shape 2
+	 * @return whether they are colliding
+	 */
 	public static boolean polygonCol(Shape s1, Shape s2) {
 		s1.updateCol();
 		s2.updateCol();

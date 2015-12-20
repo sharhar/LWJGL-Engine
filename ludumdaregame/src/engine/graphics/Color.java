@@ -1,9 +1,9 @@
+
+package engine.graphics;
 /**
  * This class is used for colors
  * @author Sharhar
  */
-package engine.graphics;
-
 public class Color {
 	
 	public float r, g, b;

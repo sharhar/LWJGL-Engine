@@ -1,10 +1,10 @@
+package engine.graphics.font;
+
+import java.awt.Font;
 /**
  * This class is used to manage fonts
  * @author Sharhar
  */
-package engine.graphics.font;
-
-import java.awt.Font;
 
 public class FontManager {
 	

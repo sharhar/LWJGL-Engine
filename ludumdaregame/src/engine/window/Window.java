@@ -7,7 +7,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -19,6 +18,10 @@ import org.lwjgl.opengl.Display;
 
 import engine.sound.SoundManager;
 
+/**
+ * This class is used to manage the window
+ * @author Sharhar
+ */
 public class Window {
 	
 	public static JFrame frame;
@@ -27,10 +30,24 @@ public class Window {
 	public static boolean closed = false;
 	public static boolean resized = false;
 	
+	/**
+	 * This function is used to create a window
+	 * @param title title of the window
+	 * @param width width of the window
+	 * @param height height of the window
+	 */
 	public static void create(String title, int width, int height) {
 		create(title,width,height,false,null);
 	}
 	
+	/**
+	 * This function is used to create a window
+	 * @param title title of the window
+	 * @param width width of the window
+	 * @param height height of the window
+	 * @param resizeable whether or not the window is resizable
+	 * @param iconPath the path to the icon
+	 */
 	public static void create(String title, int width, int height, boolean resizeable, String iconPath) {
 		try {
 			frame = new JFrame();
@@ -98,7 +115,7 @@ public class Window {
 			//fix white border
 			//Display.setDisplayMode(new DisplayMode(width, height));
 		} catch (LWJGLException e) {
-			System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+			System.out.println("NOOOOOOOOO");
 			e.printStackTrace();
 		}
 		
@@ -118,26 +135,48 @@ public class Window {
 		SoundManager.init();
 	}
 	
+	/**
+	 * This function clears the window
+	 */
 	public static void clear() {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
+	/**
+	 * This function returns the window's width
+	 * @return the window's width
+	 */
 	public static int getWidth() {
 		return Display.getWidth();
 	}
 	
+	/**
+	 * This function returns the window's title
+	 * @return the window's title
+	 */
 	public static String getTitle() {
 		return Display.getTitle();
 	}
 	
+	/**
+	 * This function returns the window's height
+	 * @return the window's height
+	 */
 	public static int getHeight() {
 		return Display.getHeight();
 	}
 	
+	/**
+	 * This function checks if the window was closed
+	 * @return whether or not the window was closed
+	 */
 	public static boolean isClosed() {
 		return closed;
 	}
 	
+	/**
+	 * This function updates the display
+	 */
 	public static void update() {
 		if(resized) {
 			glViewport(0, 0, Display.getWidth(), Display.getHeight());
@@ -147,6 +186,9 @@ public class Window {
 		Display.sync(120);
 	}
 	
+	/**
+	 * This function destroys the window
+	 */
 	public static void destroy() {
 		SoundManager.destroy();
 		Display.destroy();

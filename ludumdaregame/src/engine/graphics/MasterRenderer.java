@@ -1,7 +1,4 @@
-/**
- * A class that renders using a batch rendering technique
- * @author Sharhar
- */
+
 package engine.graphics;
 
 import java.util.ArrayList;
@@ -12,7 +9,10 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import engine.objects.Sprite;
-
+/**
+ * A class that renders using a batch rendering technique
+ * @author Sharhar
+ */
 public class MasterRenderer {
 	
 	public static Map<Integer, List<Renderable>> renderables = new HashMap<Integer, List<Renderable>>();

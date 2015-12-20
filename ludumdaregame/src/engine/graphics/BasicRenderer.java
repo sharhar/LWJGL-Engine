@@ -1,7 +1,4 @@
-/**
- * This class is used to render basic shapes and objects
- * @author Sharhar
- */
+
 package engine.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -9,7 +6,10 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.graphics.font.FontManager;
-
+/**
+ * This class is used to render basic shapes and objects
+ * @author Sharhar
+ */
 public class BasicRenderer {
 
 	/**

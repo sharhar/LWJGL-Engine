@@ -1,9 +1,9 @@
+
+package engine.graphics;
 /**
  * Interface used to create renderable objects
  * @author Sharhar
  */
-package engine.graphics;
-
 public interface Renderable {
 	/**
 	 * This function renders the object using normally

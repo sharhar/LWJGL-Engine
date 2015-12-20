@@ -6,8 +6,19 @@ import engine.graphics.BasicRenderer;
 import engine.graphics.Color;
 import engine.math.Maths;
 
+/**
+ * This class creates a rectangle using the shape class
+ * @author Sharhar
+ *
+ */
 public class ShapeRect extends Shape{
 	
+	/**
+	 * This constructor
+	 * @param pos position
+	 * @param size size
+	 * @param color color
+	 */
 	public ShapeRect(Vector2f pos, Vector2f size, Color color) {
 		super("Rect", pos, 0, color);
 		other = new Vector2f[1];
@@ -18,14 +29,23 @@ public class ShapeRect extends Shape{
 		updateCol();
 	}
 	
+	/**
+	 * This function renders the rectangle
+	 */
 	public void render() {
 		BasicRenderer.renderRect(pos.x, pos.y, other[0].x, other[0].y, r, 0, color);
 	}
 
+	/**
+	 * This function renders the rectangle using the MasterRenderer
+	 */
 	public void masterRender() {
 		
 	}
 	
+	/**
+	 * This function updates the collision information
+	 */
 	public void updateCol() {
 		if(colCalcPos.x == pos.x && colCalcPos.y == pos.y && r == colCalcR) {
 			return;
@@ -42,7 +62,9 @@ public class ShapeRect extends Shape{
 		colCalcR = r;
 	}
 
-	
+	/**
+	 * This function returns the rotation of the rectangle
+	 */
 	public float getCalcR() {
 		float R = r;
 		

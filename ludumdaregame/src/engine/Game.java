@@ -1,7 +1,4 @@
-/**
- * This class is used to manage the game
- * @author Sharhar
- */
+
 package engine;
 
 import engine.graphics.MasterRenderer;
@@ -9,7 +6,10 @@ import engine.input.KeyInput;
 import engine.time.Time;
 import engine.window.Loop;
 import engine.window.Window;
-
+/**
+ * This class is used to manage the game
+ * @author Sharhar
+ */
 public class Game{
 	
 	public static String title;

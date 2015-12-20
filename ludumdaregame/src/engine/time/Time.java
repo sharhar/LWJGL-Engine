@@ -1,9 +1,9 @@
+package engine.time;
+
 /**
  * This class is used from time management
  * @author Sharhar
  */
-package engine.time;
-
 public class Time {
 	
 	public static float deltaTime = 0;
