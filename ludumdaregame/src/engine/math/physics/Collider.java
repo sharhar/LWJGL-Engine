@@ -3,14 +3,15 @@ package engine.math.physics;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.math.Maths;
-import engine.objects.shapes.Shape;
+import engine.objects.Sprite;
+import engine.objects.shapes.CollisionShape;
 
 /**
  * This class handles collision calculations
  * @author Sharhar
  *
  */
-public class Colider {
+public class Collider {
 
 	/**
 	 * This is a general function to check if any to shapes are colliding
@@ -18,7 +19,20 @@ public class Colider {
 	 * @param s2 shape 2
 	 * @return whether the shapes are colliding
 	 */
-	public static boolean shapeShapeCol(Shape s1, Shape s2) {
+	
+	public static boolean spriteSpriteCol(Sprite sp1, Sprite sp2) {
+		for(int i = 0; i < sp1.col.length;i++) {
+			for(int j = 0;j < sp2.col.length;j++) {
+				if(shapeShapeCol(sp1.col[i], sp2.col[j])) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public static boolean shapeShapeCol(CollisionShape s1, CollisionShape s2) {
 		if(s1.shapeType.equals("Rect") && s2.shapeType.equals("Rect") && s1.r == 0 && s2.r == 0) {
 			return rectRectCol(s1, s2);
 		} else if(s1.shapeType.equals("Cir") && s2.shapeType.equals("Cir")) {
@@ -38,7 +52,7 @@ public class Colider {
 	 * @param c circle shape
 	 * @return whether they are colliding
 	 */
-	public static boolean rectCirCol(Shape r, Shape c) {
+	public static boolean rectCirCol(CollisionShape r, CollisionShape c) {
 		Vector2f close = Maths.getPointClosestToInRect(r, c.pos);
 		
 		float d = Maths.distance(close, c.pos);
@@ -52,7 +66,7 @@ public class Colider {
 	 * @param s2 shape 2
 	 * @return whether they are colliding
 	 */
-	public static boolean cirCirCol(Shape s1, Shape s2) {
+	public static boolean cirCirCol(CollisionShape s1, CollisionShape s2) {
 		float d = Maths.distance(s1.pos, s2.pos);
 		float r = s1.r + s2.r;
 		
@@ -65,7 +79,7 @@ public class Colider {
 	 * @param sh2 shape 2
 	 * @return whether they are colliding
 	 */
-	public static boolean rectRectCol(Shape sh1, Shape sh2) {
+	public static boolean rectRectCol(CollisionShape sh1, CollisionShape sh2) {
 		Vector2f p1 = sh1.pos;
 		Vector2f p2 = sh2.pos;
 		Vector2f s1 = sh1.other[0];
@@ -88,15 +102,15 @@ public class Colider {
 	 * @param s2 shape 2
 	 * @return whether they are colliding
 	 */
-	public static boolean polygonCol(Shape s1, Shape s2) {
+	public static boolean polygonCol(CollisionShape s1, CollisionShape s2) {
 		s1.updateCol();
 		s2.updateCol();
 
-		Shape[] shapes = new Shape[2];
+		CollisionShape[] shapes = new CollisionShape[2];
 		shapes[0] = s1;
 		shapes[1] = s2;
 
-		for (Shape s : shapes) {
+		for (CollisionShape s : shapes) {
 			for (int i1 = 0; i1 < s.colVert.length; i1++) {
 				int i2 = (i1 + 1) % s.colVert.length;
 				Vector2f p1 = s.colVert[i1];

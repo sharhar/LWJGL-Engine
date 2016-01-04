@@ -82,7 +82,7 @@ public class BasicRenderer {
 	 */
 	public static void renderRect(float x, float y, float w, float h, float r, int texID, Color c) {
 		glPushMatrix();
-
+		
 		float W = w / 2;
 		float H = h / 2;
 
@@ -143,6 +143,27 @@ public class BasicRenderer {
 		{
 			for (Vector2f v:verts) {
 				glVertex2f(v.x * r, v.y * r);
+			}
+		}
+		glEnd();
+		
+		glColor3f(1, 1, 1);
+
+		glPopMatrix();
+	}
+	
+	public static void renderPoly(float x, float y, float r, Vector2f[] verts, Color c) {
+		glPushMatrix();
+
+		glTranslatef(x, y, 0);
+		glRotatef(r, 0, 0, 1);
+		
+		glColor3f(c.r, c.g, c.b);
+
+		glBegin(GL_POLYGON);
+		{
+			for (Vector2f v:verts) {
+				glVertex2f(v.x, v.y);
 			}
 		}
 		glEnd();

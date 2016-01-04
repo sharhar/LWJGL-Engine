@@ -10,16 +10,14 @@ import engine.graphics.Renderable;
  * @author Sharhar
  *
  */
-abstract public class Shape implements Renderable{
+abstract public class RenderShape implements Renderable{
 	public String shapeType = "";
 	public Vector2f pos;
 	public float r;
 	public Color color;
 	public int ID;
 	public Vector2f[] other;
-	public Vector2f[] colVert;
-	public Vector2f colCalcPos = new Vector2f(Float.MAX_VALUE,Float.MAX_VALUE);
-	public float colCalcR = Float.MAX_VALUE;
+	public Vector2f[] otherPreCalc;
 	
 	/**
 	 * This constructor initializes the basic shape
@@ -28,7 +26,7 @@ abstract public class Shape implements Renderable{
 	 * @param r rotation (or radius if circle)
 	 * @param color color of shape
 	 */
-	public Shape(String shapeType, Vector2f pos, float r, Color color) {
+	public RenderShape(String shapeType, Vector2f pos, float r, Color color) {
 		this.shapeType = shapeType;
 		this.pos = pos;
 		this.r = r;
@@ -41,9 +39,4 @@ abstract public class Shape implements Renderable{
 	 * @return r value
 	 */
 	abstract public float getCalcR();
-	
-	/**
-	 * This function updates the collision vertices
-	 */
-	abstract public void updateCol();
 }

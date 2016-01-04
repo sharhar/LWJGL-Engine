@@ -3,6 +3,7 @@ package engine;
 
 import engine.graphics.MasterRenderer;
 import engine.input.KeyInput;
+import engine.objects.Sprite;
 import engine.time.Time;
 import engine.window.Loop;
 import engine.window.Window;
@@ -42,6 +43,7 @@ public class Game{
 		height = a_height;
 		loop = a_loop;
 		Window.create(title, width, height, resizeable, path);
+		Sprite.array(500000);
 	}
 	
 	

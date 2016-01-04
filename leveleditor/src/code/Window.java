@@ -44,13 +44,6 @@ public class Window extends JFrame {
 				if(chooser.showOpenDialog(Window.this) == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					
-					try {
-						Main.imageBuffer = ImageIO.read(file);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					
-					Main.readImage = true;
 				}
 			}
 		});
@@ -63,26 +56,7 @@ public class Window extends JFrame {
 				if(chooser.showOpenDialog(Window.this) == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					
-					String info = ("EntityName=" + file.getName()) 
-							+ ("\nPolyNum=" +Main.shapes.size());
 					
-					FileUtils.writeSrting(file.getPath() + ".txt", info);
-					
-					file.mkdirs();
-					
-					try {
-						ImageIO.write(Main.imageBuffer, "png", new File(file.getPath() + "/"  + file.getName() + ".png"));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					
-					for(int i = 0;i < Main.shapes.size();i++) {
-						String data = "";
-						for(int j = 0; j < Main.shapes.get(i).vecs.size();j++) {
-							data += ((Main.shapes.get(i).vecs.get(j).x-100.0f)/400.0f) + "-" + ((Main.shapes.get(i).vecs.get(j).y-100)/400.0f) + "\n";
-						}
-						FileUtils.writeSrting(file.getPath() + "/"  + "PolyData" + i + ".txt", data);
-					}
 				}
 			}
 		});
@@ -98,36 +72,23 @@ public class Window extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnStartShape = new JButton("Start Shape");
-		btnStartShape.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Main.startShape();
-			}
-		});
-		btnStartShape.setBounds(10, 11, 89, 23);
-		contentPane.add(btnStartShape);
-		
-		JButton btnEndShape = new JButton("End Shape");
-		btnEndShape.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Main.endShape();
-			}
-		});
-		btnEndShape.setBounds(10, 45, 89, 23);
-		contentPane.add(btnEndShape);
-		
-		JButton btnEditShape = new JButton("Edit Shape");
-		btnEditShape.addActionListener(new ActionListener() {
+		JButton btnAddEntity = new JButton("Add Entity");
+		btnAddEntity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
-		btnEditShape.setBounds(10, 79, 89, 23);
-		contentPane.add(btnEditShape);
+		btnAddEntity.setBounds(10, 11, 135, 23);
+		contentPane.add(btnAddEntity);
 		
-		JCheckBox chckbxWireframe = new JCheckBox("Wireframe");
-		chckbxWireframe.setBounds(10, 109, 97, 23);
-		contentPane.add(chckbxWireframe);
+		JButton btnAddImage = new JButton("Add Image");
+		btnAddImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnAddImage.setBounds(10, 45, 135, 23);
+		contentPane.add(btnAddImage);
 		setVisible(true);
 	}
 }

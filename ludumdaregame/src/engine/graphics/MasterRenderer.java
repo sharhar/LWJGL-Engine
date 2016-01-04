@@ -38,7 +38,7 @@ public class MasterRenderer {
 	 * @param sprite the object to be added
 	 */
 	public static void addSprite(Sprite sprite) {
-		addRenderable(sprite.shape.ID, sprite);
+		addRenderable(sprite.renderShape.ID, sprite);
 	}
 	
 	/**

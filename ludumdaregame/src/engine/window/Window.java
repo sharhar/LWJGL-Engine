@@ -69,8 +69,7 @@ public class Window {
 			try {
 				frame.setIconImage(ImageIO.read(Window.class.getResourceAsStream(iconPath)));
 			} catch (Exception e) {
-				System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYY");
-				e.printStackTrace();
+				System.out.println("Could not load Icon!");
 			}
 			
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

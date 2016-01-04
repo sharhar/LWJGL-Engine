@@ -10,7 +10,7 @@ import engine.graphics.Color;
  * @author Sharhar
  *
  */
-public class ShapeCircle extends Shape{
+public class RenderShapeCircle extends RenderShape{
 
 	/**
 	 * This constructor creates the circle shape 
@@ -19,7 +19,7 @@ public class ShapeCircle extends Shape{
 	 * @param vertCount vertex count
 	 * @param color color
 	 */
-	public ShapeCircle(Vector2f pos, float r ,int vertCount, Color color) {
+	public RenderShapeCircle(Vector2f pos, float r ,int vertCount, Color color) {
 		super("Cir", pos, r, color);
 		
 		other = new Vector2f[vertCount];
@@ -30,10 +30,6 @@ public class ShapeCircle extends Shape{
 			float Y = (float) (Math.sin(theta));
 			other[i] = new Vector2f(X,Y);
 		}
-		
-		colVert = new Vector2f[vertCount];
-		
-		updateCol();
 	}
 	
 	
@@ -49,21 +45,6 @@ public class ShapeCircle extends Shape{
 	 */
 	public void masterRender() {
 		
-	}
-	
-	/**
-	 * This function updates the collision information of the model
-	 */
-	public void updateCol() {
-		if(colCalcPos.x == pos.x && colCalcPos.y == pos.y) {
-			return;
-		}
-		
-		for(int i = 0;i < other.length;i++) {
-			colVert[i] = new Vector2f(other[i].x*r + pos.x, other[i].y*r + pos.y);
-		}
-		
-		colCalcPos = new Vector2f(pos.x, pos.y);
 	}
 
 	/**

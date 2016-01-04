@@ -4,14 +4,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 import engine.graphics.BasicRenderer;
 import engine.graphics.Color;
-import engine.math.Maths;
 
 /**
  * This class creates a rectangle using the shape class
  * @author Sharhar
  *
  */
-public class ShapeRect extends Shape{
+public class RenderShapeRect extends RenderShape{
 	
 	/**
 	 * This constructor
@@ -19,21 +18,17 @@ public class ShapeRect extends Shape{
 	 * @param size size
 	 * @param color color
 	 */
-	public ShapeRect(Vector2f pos, Vector2f size, Color color) {
+	public RenderShapeRect(Vector2f pos, Vector2f size, Color color) {
 		super("Rect", pos, 0, color);
 		other = new Vector2f[1];
 		other[0] = size;
-		
-		colVert = new Vector2f[4];
-		
-		updateCol();
 	}
 	
 	/**
 	 * This function renders the rectangle
 	 */
 	public void render() {
-		BasicRenderer.renderRect(pos.x, pos.y, other[0].x, other[0].y, r, 0, color);
+		BasicRenderer.renderRect(pos.x, pos.y, other[0].x, other[0].y, r, ID, color);
 	}
 
 	/**
@@ -43,9 +38,7 @@ public class ShapeRect extends Shape{
 		
 	}
 	
-	/**
-	 * This function updates the collision information
-	 */
+	/*
 	public void updateCol() {
 		if(colCalcPos.x == pos.x && colCalcPos.y == pos.y && r == colCalcR) {
 			return;
@@ -61,6 +54,7 @@ public class ShapeRect extends Shape{
 		colCalcPos = new Vector2f(pos.x, pos.y);
 		colCalcR = r;
 	}
+	*/
 
 	/**
 	 * This function returns the rotation of the rectangle

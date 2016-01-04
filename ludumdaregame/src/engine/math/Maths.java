@@ -2,7 +2,7 @@ package engine.math;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import engine.objects.shapes.Shape;
+import engine.objects.shapes.CollisionShape;
 
 /**
  * A Math class to do Math
@@ -21,7 +21,7 @@ public class Maths {
 	 * @param p point
 	 * @return closest point in rectangle
 	 */
-	public static Vector2f getPointClosestToInRect(Shape s, Vector2f p) {
+	public static Vector2f getPointClosestToInRect(CollisionShape s, Vector2f p) {
 		if(!s.shapeType.equals("Rect")) {
 			System.err.println("Shape " + s + " is not a rectangle!");
 			return null;
