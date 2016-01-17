@@ -25,6 +25,12 @@ public class SoundManager {
 		}
 	}
 	
+	public static void setUniversalSoundVolume(float volume) {
+		for(Sound s:sounds) {
+			s.setVolume(volume);
+		}
+	}
+	
 	/**
 	 * This function adds a sound to the list of sounds
 	 * @param sound

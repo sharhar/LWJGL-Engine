@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.graphics.font.FontManager;
+import engine.graphics.font.TrueTypeFont;
 /**
  * This class is used to render basic shapes and objects
  * @author Sharhar
@@ -18,9 +19,25 @@ public class BasicRenderer {
 	 * @param y y position of string
 	 * @param text text to render
 	 * @param scale scale of the text
+	 * @param c color of text
 	 */
-	public static void drawString(float x, float y, String text, float scale) {
-		FontManager.drawString(x, y, text, scale / 46.0f);
+	public static void drawString(float x, float y, String text, float scale, Color c) {
+		glColor3f(c.r, c.g, c.b);
+		FontManager.drawString(x, y, text, scale / 46.0f,TrueTypeFont.ALIGN_LEFT);
+	}
+	
+	/**
+	 * This function renders a string
+	 * @param x x position of string
+	 * @param y y position of string
+	 * @param text text to render
+	 * @param scale scale of the text
+	 * @param align where to align the text to
+	 * @param c color of text
+	 */
+	public static void drawString(float x, float y, String text, float scale, int align, Color c) {
+		glColor3f(c.r, c.g, c.b);
+		FontManager.drawString(x, y, text, scale / 46.0f, align);
 	}
 
 	/**
@@ -91,9 +108,8 @@ public class BasicRenderer {
 		
 		glColor3f(c.r, c.g, c.b);
 
-		if (texID != 0) {
-			glBindTexture(GL_TEXTURE_2D, texID);
-		}
+		glBindTexture(GL_TEXTURE_2D, texID);
+			
 		glBegin(GL_QUADS);
 		{
 			if (texID != 0) {
@@ -110,7 +126,6 @@ public class BasicRenderer {
 				glVertex2f(W, H);
 				glVertex2f(-W, H);
 				glVertex2f(-W, -H);
-
 			}
 		}
 		glEnd();

@@ -6,6 +6,9 @@ package engine.graphics;
  */
 public class Color {
 	
+	public static Color black = new Color(0,0,0);
+	public static Color white = new Color(1,1,1);
+	
 	public float r, g, b;
 	
 	/**

@@ -11,7 +11,7 @@ public class FontManager {
 	public static TrueTypeFont arial = new TrueTypeFont(new Font("Arial",Font.PLAIN, 46), true);
 	public static TrueTypeFont arialBold = new TrueTypeFont(new Font("Arial",Font.BOLD, 46), true);
 	
-	public static TrueTypeFont current = arial;
+	public static TrueTypeFont current = arialBold;
 	
 	/**
 	 * Sets the FontManager's font
@@ -28,7 +28,7 @@ public class FontManager {
 	 * @param text the text to be rendered
 	 * @param scale scale of the text
 	 */
-	public static void drawString(float x, float y, String text, float scale) {
-		current.drawString(x, y, text, scale, scale);
+	public static void drawString(float x, float y, String text, float scale, int align) {
+		current.drawString(x, y, text, scale, scale,align);
 	}
 }

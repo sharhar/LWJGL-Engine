@@ -74,35 +74,18 @@ public class Window {
 			
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		    frame.addWindowListener(new WindowAdapter() {
-		        @Override 
 		        public void windowClosing(WindowEvent event) {
 		            closed = true;
 		        }
 		    });
 		    
 		    frame.addComponentListener(new ComponentListener() {
-		        @Override
 		    	public void componentResized(ComponentEvent e) {
 		            resized = true;       
 		        }
-
-				@Override
-				public void componentHidden(ComponentEvent arg0) {
-					
-					
-				}
-
-				@Override
-				public void componentMoved(ComponentEvent arg0) {
-					
-					
-				}
-
-				@Override
-				public void componentShown(ComponentEvent arg0) {
-					
-					
-				}
+				public void componentHidden(ComponentEvent arg0) {}
+				public void componentMoved(ComponentEvent arg0) {}
+				public void componentShown(ComponentEvent arg0) {}
 		    });
 			
 			frame.setTitle(title);
@@ -111,15 +94,10 @@ public class Window {
 			
 			Mouse.create();
 			Keyboard.create();
-			//fix white border
-			//Display.setDisplayMode(new DisplayMode(width, height));
 		} catch (LWJGLException e) {
-			System.out.println("NOOOOOOOOO");
+			System.err.println("Could not create window!");
 			e.printStackTrace();
 		}
-		
-		//Display.setResizable(true);
-		//Display.setVSyncEnabled(false);
 		
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_PROJECTION);
@@ -192,5 +170,6 @@ public class Window {
 		SoundManager.destroy();
 		Display.destroy();
 		frame.dispose();
+		System.exit(0);
 	}
 }

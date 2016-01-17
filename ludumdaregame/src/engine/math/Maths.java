@@ -2,6 +2,7 @@ package engine.math;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import engine.UI.Bounds;
 import engine.objects.shapes.CollisionShape;
 
 /**
@@ -14,6 +15,22 @@ public class Maths {
 	public static float TAU = PI*2;
 	public static float PHI = (float) ((Math.sqrt(5)/2)+0.5);
 	public static float E = 2.718281828459045f;
+	
+	public static boolean inBounds(Bounds bounds, Vector2f vect) {
+		Vector2f p1 = new Vector2f(bounds.x,bounds.y);
+		Vector2f p2 = vect;
+		Vector2f s1 = new Vector2f(bounds.w,bounds.h);
+		
+		if(p1.x + s1.x< p2.x || p2.x < p1.x) {
+			return false;
+		}
+		
+		if(p1.y + s1.y < p2.y || p2.y< p1.y) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * This function is used the rectangle circle collision algorithm
