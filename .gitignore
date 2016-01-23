@@ -1,5 +1,3 @@
-*.class
-
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -18,7 +16,8 @@ ludumdaregame/.settings
 spritecreationgui/.project
 spritecreationgui/.classpath
 spritecreationgui/.settings
-ludumdaregame/bin
-spritecreationgui/bin
+enginewithadvancedopengl/.project
+enginewithadvancedopengl/.classpath
+enginewithadvancedopengl/.settings
 
 .DS_Store
