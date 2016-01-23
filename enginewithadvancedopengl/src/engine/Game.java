@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import org.lwjgl.opengl.GL11;
 
+import engine.shaders.StaticShader;
 import engine.utils.Loader;
 
 public class Game {
@@ -29,6 +30,7 @@ public class Game {
 	public void init(Window window, Loop loop) {
 		this.loop = loop;
 		this.window = window;
+		StaticShader.init();
 	}
 	
 	public void start() {
@@ -61,6 +63,7 @@ public class Game {
 	}
 	
 	public void destroy() {
+		StaticShader.basicShader.cleanUp();
 		Loader.cleanUp();
 		window.close();
 	}

@@ -5,6 +5,8 @@ import engine.Loop;
 import engine.Window;
 import engine.graphics.Renderer;
 import engine.graphics.models.RawModel;
+import engine.shaders.ShaderProgram;
+import engine.shaders.StaticShader;
 import engine.utils.Loader;
 
 public class Main implements Loop {
@@ -12,7 +14,9 @@ public class Main implements Loop {
 	RawModel model = null;
 
 	public void run() {
+		StaticShader.basicShader.start();
 		Renderer.render(model);
+		ShaderProgram.stopShaders();
 	}
 
 	public Main() {
