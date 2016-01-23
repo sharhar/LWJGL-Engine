@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.graphics.Renderable;
+import engine.math.physics.Collider;
 import engine.objects.shapes.CollisionShape;
 import engine.objects.shapes.RenderShape;
 
@@ -22,6 +23,7 @@ public class Sprite implements Renderable{
 	public CollisionShape[] col;
 	public int ID;
 	public boolean dead = false;
+	public boolean grounded = false;
 	
 	public static void array(int amount) {
 		IDs = new boolean[amount];
@@ -79,8 +81,48 @@ public class Sprite implements Renderable{
 	/**
 	 * This function moves the sprite, but it also takes into account the other sprites in the scene
 	 */
-	public void moveCol() {
+	public void moveCol(Vector2f move) {
+		renderShape.pos.x += move.x;
+		for(int i = 0; i < col.length;i++) {
+			col[i].pos.x += move.x;
+		}
+		if(anyCollision()) {
+			renderShape.pos.x -= move.x;
+			for(int i = 0; i < col.length;i++) {
+				col[i].pos.x -= move.x;
+			}
+		}
 		
+		renderShape.pos.y += move.y;
+		for(int i = 0; i < col.length;i++) {
+			col[i].pos.y += move.y;
+		}
+		if(anyCollision()) {
+			renderShape.pos.y -= move.y;
+			for(int i = 0; i < col.length;i++) {
+				col[i].pos.y -= move.y;
+			}
+			
+			if(move.y < 0) {
+				grounded = true;
+			} else {
+				grounded = false;
+			}
+		} else {
+			grounded = false;
+		}
+	}
+	
+	private boolean anyCollision() {
+		for(Sprite s:sprites) {
+			if(ID != s.ID) {
+				if(Collider.spriteSpriteCol(this, s)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

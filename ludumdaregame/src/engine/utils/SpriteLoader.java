@@ -71,6 +71,7 @@ public class SpriteLoader {
 			return result;
 		} catch (Exception e) {
 			System.err.println("Could not load sprite " + path);
+			e.printStackTrace();
 			Game.close();
 			return null;
 		}		

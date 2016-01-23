@@ -123,18 +123,7 @@ public class Main {
 			}
 			*/
 			
-			if(drawingShape) {
-				if(MouseInput.isMousePressed()) {
-					temp.addVec(MouseInput.getMousePos());
-				}
-				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-				Renderer.renderShape(temp);
-				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-			}
 			
-			for(Shape s:getShapes()) {
-				Renderer.renderShape(s);
-			}
 			
 			
 			glBindTexture(GL_TEXTURE_2D, texture);
@@ -164,6 +153,19 @@ public class Main {
 			}
 			glEnd();
 			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+			
+			if(drawingShape) {
+				if(MouseInput.isMousePressed()) {
+					temp.addVec(MouseInput.getMousePos());
+				}
+				glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+				Renderer.renderShape(temp);
+				glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+			}
+			
+			for(Shape s:getShapes()) {
+				Renderer.renderShape(s);
+			}
 			
 			Display.update();
 		}

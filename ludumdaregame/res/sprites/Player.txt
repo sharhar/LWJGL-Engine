@@ -1,0 +1,2 @@
+EntityName=Player
+PolyNum=5

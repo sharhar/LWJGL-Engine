@@ -1,5 +1,6 @@
 package game;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.Game;
@@ -12,9 +13,14 @@ import engine.UI.UIMouseEvent;
 import engine.UI.WindowUI;
 import engine.graphics.BasicRenderer;
 import engine.graphics.Color;
+import engine.graphics.MasterRenderer;
 import engine.graphics.Texture;
+import engine.input.KeyInput;
+import engine.objects.Sprite;
 import engine.sound.Sound;
 import engine.sound.SoundManager;
+import engine.time.Time;
+import engine.utils.SpriteLoader;
 import engine.window.Loop;
 
 public class Main implements Loop {
@@ -23,6 +29,14 @@ public class Main implements Loop {
 	WindowUI menu;
 	WindowUI settingsMenu;
 	Sound menuMusic;
+	
+	Sprite stage;
+	Sprite player;
+	
+	float yVel = 0;
+	float xVel = 0;
+	float speed = 75;
+	float gForce = -4f;
 	
 	public void run() {
 		if(screen == 0) {
@@ -35,6 +49,28 @@ public class Main implements Loop {
 			BasicRenderer.drawString(500, 500, "Settings", 80, Color.white);
 		} else if (screen == 2) {
 			
+			player.moveCol(new Vector2f(xVel,yVel));
+			
+			if(!player.grounded) {
+				yVel += gForce*Time.deltaTime;
+			} else {
+				yVel = 0;
+			}
+			
+			if(KeyInput.isKeyDown(Keyboard.KEY_W) && player.grounded) {
+				yVel = 1.7f;
+			}
+			
+			if(KeyInput.isKeyDown(Keyboard.KEY_A)) {
+				xVel = -speed*Time.deltaTime;
+			} else if(KeyInput.isKeyDown(Keyboard.KEY_D)) {
+				xVel = speed*Time.deltaTime;
+			} else {
+				xVel = 0;
+			}
+			
+			MasterRenderer.addSprite(stage);
+			MasterRenderer.addSprite(player);
 		}
 	}
 
@@ -47,6 +83,9 @@ public class Main implements Loop {
 		menuMusic.play();
 		
 		SoundManager.setUniversalSoundVolume(0);
+		
+		stage = SpriteLoader.loadSprite("C:\\Users\\wiish\\Git\\LWJGL2DEngine\\ludumdaregame\\res\\sprites\\Stage1", new Vector2f(0, 0), new Vector2f(1280, 720));
+		player = SpriteLoader.loadSprite("C:\\Users\\wiish\\Git\\LWJGL2DEngine\\ludumdaregame\\res\\sprites\\Player", new Vector2f(600, 300), new Vector2f(100, 100));
 		
 		Game.start();
 	}

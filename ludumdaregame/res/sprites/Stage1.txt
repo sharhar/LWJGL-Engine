@@ -1,0 +1,2 @@
+EntityName=Stage1
+PolyNum=5
