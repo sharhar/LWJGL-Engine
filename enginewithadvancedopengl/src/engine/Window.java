@@ -89,14 +89,16 @@ public class Window {
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 		glfwShowWindow(window);
 		
 		GL.createCapabilities();
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.2f, 0.3f, 0.9f, 1.0f);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 }

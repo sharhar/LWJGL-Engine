@@ -54,14 +54,14 @@ public class Maths {
 		float c = (float) Math.cos(angle);
 		float s = (float) Math.sin(angle);
 		
-		result[getPos(0,0)] = matrix[getPos(0,0)] * c + matrix[getPos(1,0)] * s;
-		result[getPos(0,1)] = matrix[getPos(0,1)] * c + matrix[getPos(1,1)] * s;
-		result[getPos(0,2)] = matrix[getPos(0,2)] * c + matrix[getPos(1,2)] * s;
-		result[getPos(0,3)] = matrix[getPos(0,3)] * c + matrix[getPos(1,3)] * s;
-		result[getPos(1,0)] = matrix[getPos(0,0)] * -s + matrix[getPos(1,0)] * c;
-		result[getPos(1,1)] = matrix[getPos(0,1)] * -s + matrix[getPos(1,1)] * c;
-		result[getPos(1,2)] = matrix[getPos(0,2)] * -s + matrix[getPos(1,2)] * c;
-		result[getPos(1,3)] = matrix[getPos(0,3)] * -s + matrix[getPos(1,3)] * c;
+		result[0*4 + 0] = matrix[0*4 + 0] *  c + matrix[1*4 + 0] * s;
+		result[0*4 + 1] = matrix[0*4 + 1] *  c + matrix[1*4 + 1] * s;
+		result[0*4 + 2] = matrix[0*4 + 2] *  c + matrix[1*4 + 2] * s;
+		result[0*4 + 3] = matrix[0*4 + 3] *  c + matrix[1*4 + 3] * s;
+		result[1*4 + 0] = matrix[0*4 + 0] * -s + matrix[1*4 + 0] * c;
+		result[1*4 + 1] = matrix[0*4 + 1] * -s + matrix[1*4 + 1] * c;
+		result[1*4 + 2] = matrix[0*4 + 2] * -s + matrix[1*4 + 2] * c;
+		result[1*4 + 3] = matrix[0*4 + 3] * -s + matrix[1*4 + 3] * c;
 		
 		return result;
 	}
@@ -72,47 +72,32 @@ public class Maths {
 		
 		float c = (float) Math.cos(angle);
 		float s = (float) Math.sin(angle);
-		float oneminusc = 1.0f - c;
-		float xy = axis.x*axis.y;
-		float yz = axis.y*axis.z;
-		float xz = axis.x*axis.z;
-		float xs = axis.x*s;
-		float ys = axis.y*s;
-		float zs = axis.z*s;
+		float omc = 1.0f - c;
 
-		float f00 = axis.x*axis.x*oneminusc+c;
-		float f01 = xy*oneminusc+zs;
-		float f02 = xz*oneminusc-ys;
+		float r00 = axis.x*axis.x*omc+c;
+		float r01 = axis.x*axis.y*omc+axis.z*s;
+		float r02 = axis.x*axis.z*omc-axis.y*s;
 		
-		float f10 = xy*oneminusc-zs;
-		float f11 = axis.y*axis.y*oneminusc+c;
-		float f12 = yz*oneminusc+xs;
+		float r10 = axis.x*axis.y*omc-axis.z*s;
+		float r11 = axis.y*axis.y*omc+c;
+		float r12 = axis.y*axis.z*omc+axis.x*s;
 		
-		float f20 = xz*oneminusc+ys;
-		float f21 = yz*oneminusc-xs;
-		float f22 = axis.z*axis.z*oneminusc+c;
+		float r20 = axis.x*axis.z*omc+axis.y*s;
+		float r21 = axis.y*axis.z*omc-axis.x*s;
+		float r22 = axis.z*axis.z*omc+c;
 
-
-		float t00 = matrix[getPos(0,0)] * f00 + matrix[getPos(1,0)] * f01 + matrix[getPos(2,0)] * f02;
-		float t01 = matrix[getPos(0,1)] * f00 + matrix[getPos(1,1)] * f01 + matrix[getPos(2,1)] * f02;
-		float t02 = matrix[getPos(0,2)] * f00 + matrix[getPos(1,2)] * f01 + matrix[getPos(2,2)] * f02;
-		float t03 = matrix[getPos(0,3)] * f00 + matrix[getPos(1,3)] * f01 + matrix[getPos(2,3)] * f02;
-		float t10 = matrix[getPos(0,0)] * f10 + matrix[getPos(1,0)] * f11 + matrix[getPos(2,0)] * f12;
-		float t11 = matrix[getPos(0,1)] * f10 + matrix[getPos(1,1)] * f11 + matrix[getPos(2,1)] * f12;
-		float t12 = matrix[getPos(0,2)] * f10 + matrix[getPos(1,2)] * f11 + matrix[getPos(2,2)] * f12;
-		float t13 = matrix[getPos(0,3)] * f10 + matrix[getPos(1,3)] * f11 + matrix[getPos(2,3)] * f12;
-		result[getPos(0,0)] = t00;
-		result[getPos(0,1)] = t01;
-		result[getPos(0,2)] = t02;
-		result[getPos(0,3)] = t03;
-		result[getPos(1,0)] = t10;
-		result[getPos(1,1)] = t11;
-		result[getPos(1,2)] = t12;
-		result[getPos(1,3)] = t13;
-		result[getPos(2,0)] = matrix[getPos(0,0)] * f20 + matrix[getPos(1,0)] * f21 + matrix[getPos(2,0)] * f22;
-		result[getPos(2,1)] = matrix[getPos(0,1)] * f20 + matrix[getPos(1,1)] * f21 + matrix[getPos(2,1)] * f22;
-		result[getPos(2,2)] = matrix[getPos(0,2)] * f20 + matrix[getPos(1,2)] * f21 + matrix[getPos(2,2)] * f22;
-		result[getPos(2,3)] = matrix[getPos(0,3)] * f20 + matrix[getPos(1,3)] * f21 + matrix[getPos(2,3)] * f22;
+		result[getPos(0,0)] = matrix[getPos(0,0)] * r00 + matrix[getPos(1,0)] * r01 + matrix[getPos(2,0)] * r02;
+		result[getPos(0,1)] = matrix[getPos(0,1)] * r00 + matrix[getPos(1,1)] * r01 + matrix[getPos(2,1)] * r02;
+		result[getPos(0,2)] = matrix[getPos(0,2)] * r00 + matrix[getPos(1,2)] * r01 + matrix[getPos(2,2)] * r02;
+		result[getPos(0,3)] = matrix[getPos(0,3)] * r00 + matrix[getPos(1,3)] * r01 + matrix[getPos(2,3)] * r02;
+		result[getPos(1,0)] = matrix[getPos(0,0)] * r10 + matrix[getPos(1,0)] * r11 + matrix[getPos(2,0)] * r12;
+		result[getPos(1,1)] = matrix[getPos(0,1)] * r10 + matrix[getPos(1,1)] * r11 + matrix[getPos(2,1)] * r12;
+		result[getPos(1,2)] = matrix[getPos(0,2)] * r10 + matrix[getPos(1,2)] * r11 + matrix[getPos(2,2)] * r12;
+		result[getPos(1,3)] = matrix[getPos(0,3)] * r10 + matrix[getPos(1,3)] * r11 + matrix[getPos(2,3)] * r12;
+		result[getPos(2,0)] = matrix[getPos(0,0)] * r20 + matrix[getPos(1,0)] * r21 + matrix[getPos(2,0)] * r22;
+		result[getPos(2,1)] = matrix[getPos(0,1)] * r20 + matrix[getPos(1,1)] * r21 + matrix[getPos(2,1)] * r22;
+		result[getPos(2,2)] = matrix[getPos(0,2)] * r20 + matrix[getPos(1,2)] * r21 + matrix[getPos(2,2)] * r22;
+		result[getPos(2,3)] = matrix[getPos(0,3)] * r20 + matrix[getPos(1,3)] * r21 + matrix[getPos(2,3)] * r22;
 		
 		return result;
 	}

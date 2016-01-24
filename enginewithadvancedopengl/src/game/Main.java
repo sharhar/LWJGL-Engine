@@ -9,21 +9,25 @@ import engine.graphics.models.TexturedModel;
 import engine.graphics.textures.ModelTexture;
 import engine.maths.Vector2f;
 import engine.objects.Entity;
-import engine.shaders.ShaderProgram;
-import engine.shaders.StaticShader;
+import engine.sound.SoundManager;
 import engine.utils.Loader;
+import engine.maths.Sync;
 
 public class Main implements Loop {
 
-	Entity entity;
+	Entity[] ents;
 	
 	public void run() {
-		StaticShader.basicShader.start();
-		MasterRenderer.addEntity(entity);
-		ShaderProgram.stopShaders();
-		entity.rot(1);
+		for(Entity ent:ents) {
+			ent.rot(5f);
+			MasterRenderer.addEntity(ent);
+		}
 		
-		MasterRenderer.renderScene();
+		Sync.sync(60);
+	}
+
+	public void stop() {
+		SoundManager.destroy();
 	}
 
 	public Main() {
@@ -32,7 +36,13 @@ public class Main implements Loop {
 
 		ModelTexture texture = new ModelTexture(Loader.loadTexture("/test.png"));
 		TexturedModel model = new TexturedModel(RectangleModel.rectangle, texture);
-		entity = new Entity(model, new Vector2f(200, 200), 0, new Vector2f(100, 100));
+		
+		ents = new Entity[10];
+		for(int i = 0; i < ents.length;i++) {
+			ents[i] = new Entity(model, new Vector2f(200 + (i%5)*200, (i/5)*200 + 100), 0, new Vector2f(50, 50));
+		}
+		
+		SoundManager.init();
 		
 		game.start();
 	}
