@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import org.lwjgl.opengl.GL11;
 
+import engine.graphics.Renderer;
 import engine.shaders.StaticShader;
 import engine.utils.Loader;
 
@@ -35,6 +36,7 @@ public class Game {
 	
 	public void start() {
 		running = true;
+		Renderer.init(window.getWidth(), window.getHeight());
 		run();
 	}
 	

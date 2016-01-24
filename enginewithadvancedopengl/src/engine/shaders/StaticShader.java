@@ -17,5 +17,19 @@ public class StaticShader extends ShaderProgram{
 	
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
+		super.bindAttribute(1, "textureCoords");
+	}
+	
+	protected void getAllUniformLocations() {
+		super.getUniformLocation("transformationMatrix");
+		super.getUniformLocation("projectionMatrix");
+	}
+	
+	public void loadProjectionMatrix(float[] data) {
+		super.loadMatrix4f(uniforms.get("projectionMatrix"), data);
+	}
+	
+	public void loadTransformationMatrix(float[] data) {
+		super.loadMatrix4f(uniforms.get("transformationMatrix"), data);
 	}
 }

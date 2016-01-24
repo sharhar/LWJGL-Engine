@@ -95,5 +95,8 @@ public class Window {
 		GL.createCapabilities();
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 	}
 }
