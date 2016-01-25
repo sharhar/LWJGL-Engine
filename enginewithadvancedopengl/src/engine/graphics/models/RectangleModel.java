@@ -9,10 +9,10 @@ public class RectangleModel extends RawModel{
 	}
 
 	static float[] vertices = { 
-			-1,  1,
-			-1, -1, 
-			 1, -1,
-			 1,  1
+			-0.5f,  0.5f,
+			-0.5f, -0.5f, 
+			 0.5f, -0.5f,
+			 0.5f,  0.5f
 			};
 	
 	static int[] index = {

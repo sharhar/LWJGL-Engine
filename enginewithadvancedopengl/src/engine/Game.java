@@ -32,6 +32,10 @@ public class Game {
 		
 	}
 	
+	public Window getWindow (){
+		return window;
+	}
+	
 	public Game(Window window, Loop loop) {
 		init(window, loop);
 	}
