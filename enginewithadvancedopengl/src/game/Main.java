@@ -10,6 +10,7 @@ import engine.graphics.models.RectangleModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.textures.ModelTexture;
 import engine.input.Keyboard;
+import engine.input.Mouse;
 import engine.maths.Vector2f;
 import engine.objects.Entity;
 import engine.utils.Loader;
@@ -23,23 +24,13 @@ public class Main implements Loop {
 	public void run() {
 		MasterRenderer.addEntity(entity);
 
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
-			entity.move(new Vector2f(0, 2));
-		}
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
-			entity.move(new Vector2f(0, -2));
-		}
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_A)) {
-			entity.move(new Vector2f(-2, 0));
-		}
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_D)) {
-			entity.move(new Vector2f(2, 0));
-		}
+		entity.getPosition().x = Mouse.pos.x;
+		entity.getPosition().y = Mouse.pos.y;
 		
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
+		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_E)) {
 			entity.rot(-1f);
 		}
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
+		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_Q)) {
 			entity.rot(1f);
 		}
 		
@@ -57,9 +48,7 @@ public class Main implements Loop {
 		ModelTexture texture = new ModelTexture(Loader.loadTexture("/test.png"));
 		TexturedModel model = new TexturedModel(RectangleModel.rectangle, texture);
 		
-		entity = new Entity(model, new Vector2f(400, 400), 0, new Vector2f(200, 200));
-		
-		Keyboard.init();
+		entity = new Entity(model, new Vector2f(400, 400), 0, new Vector2f(50, 50));
 		
 		game.start();
 	}

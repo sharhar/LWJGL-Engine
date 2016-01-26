@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 import engine.graphics.MasterRenderer;
 import engine.graphics.Renderer;
+import engine.input.Keyboard;
+import engine.input.Mouse;
 import engine.shaders.StaticShader;
 import engine.sound.SoundManager;
 import engine.utils.Loader;
@@ -38,6 +40,11 @@ public class Game {
 	
 	public Game(Window window, Loop loop) {
 		init(window, loop);
+		Renderer.init(window.getWidth(), window.getHeight());
+		SoundManager.init();
+		Keyboard.init();
+		Mouse.setWindow(window);
+		fpsCounter = new Timer();
 	}
 	
 	public void init(Window window, Loop loop) {
@@ -52,9 +59,6 @@ public class Game {
 	
 	public void start() {
 		running = true;
-		Renderer.init(window.getWidth(), window.getHeight());
-		SoundManager.init();
-		fpsCounter = new Timer();
 		fpsCounter.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				if(printFPS) {
@@ -69,6 +73,7 @@ public class Game {
 	public void run() {
 		while(running) {
 			glClear(GL_COLOR_BUFFER_BIT);
+			Mouse.tick();
 			loop.run();
 			MasterRenderer.renderScene();
 			glfwSwapBuffers(window.getWindow());
