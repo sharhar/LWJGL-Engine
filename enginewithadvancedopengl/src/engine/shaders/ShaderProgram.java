@@ -19,10 +19,16 @@ public abstract class ShaderProgram {
 	protected int vertexShaderID;
 	protected int fragmentShaderID;
 	
-	protected Map<String, Integer> uniforms = new HashMap<String, Integer>();
+	public Map<String, Integer> uniforms = new HashMap<String, Integer>();
 	protected List<String> uniformNames = new ArrayList<String>();
 	
-	public ShaderProgram(String vertexFile, String fragmentFile) {
+	protected HashMap<String, String> constants = new HashMap<String, String>();
+	
+	public ShaderProgram() {
+		
+	}
+	
+	protected void compile(String vertexFile, String fragmentFile) {
 		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();
@@ -48,11 +54,23 @@ public abstract class ShaderProgram {
 		return location;
 	}
 	
+	//protected int initArray2f(int location, int length) {
+		//GL20.glUniform2f
+	//}
+	
+	public void loadConstant(String name, String value) {
+		constants.put(name, value);
+	}
+	
+	protected int getUniformLocationRaw(String uniformName) {
+		return GL20.glGetUniformLocation(programID, uniformName);
+	}
+	
 	protected void loadFloat(int location, float value) {
 		GL20.glUniform1f(location, value);
 	}
 	
-	protected void loadVec2(int location, float x, float y) {
+	public void loadVec2(int location, float x, float y) {
 		GL20.glUniform2f(location, x, y);
 	}
 	
@@ -105,7 +123,7 @@ public abstract class ShaderProgram {
 		GL20.glBindAttribLocation(programID, attribute, variable);
 	}
 	
-	private static int loadShader(String file, int type) {
+	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -119,8 +137,13 @@ public abstract class ShaderProgram {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		String temp = new String(shaderSource);
+		for(String cons:constants.keySet()) {
+			temp = temp.replace(cons, constants.get(cons));
+		}
+		
 		int shaderID = GL20.glCreateShader(type);
-		GL20.glShaderSource(shaderID, shaderSource);
+		GL20.glShaderSource(shaderID, temp);
 		GL20.glCompileShader(shaderID);
 		if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
