@@ -5,41 +5,66 @@ import org.lwjgl.glfw.GLFW;
 import engine.Game;
 import engine.Loop;
 import engine.Window;
-import engine.graphics.MasterRenderer;
-import engine.graphics.models.RectangleModel;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.Renderer;
 import engine.input.Keyboard;
-import engine.input.Mouse;
 import engine.maths.Sync;
 import engine.maths.Vector2f;
 import engine.maths.Vector3f;
 import engine.objects.Entity;
-import engine.objects.Light;
-import engine.shaders.ShaderProgram;
 import engine.shaders.StaticShader;
-import engine.utils.Loader;
+import game.entities.Torch;
 
 public class Main implements Loop {
 
 	Entity entity;
+	Entity bg;
+	Torch torch;
+	Torch torch2;
+	Torch torch3;
+	Torch torch4;
+	Torch torch5;
+	Torch torch6;
 	Game game;
-	Light light;
 	
 	public void run() {
-		MasterRenderer.addEntity(entity);
 		
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_E)) {
-			entity.rot(-1f);
-		}
-		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_Q)) {
-			entity.rot(1f);
+		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
+			float off = 10;
+			torch.light.range += off;
+			torch2.light.range += off;
+			torch3.light.range += off;
+			torch4.light.range += off;
+			torch5.light.range += off;
+			torch6.light.range += off;
 		}
 		
-		light.pos = new Vector2f((Mouse.pos.x - (game.getWindow().getWidth()/2))/(game.getWindow().getWidth()/2), (Mouse.pos.y - (game.getWindow().getHeight()/2))/(game.getWindow().getHeight()/2));
-		StaticShader.basicShader.start();
-		StaticShader.basicShader.loadLight(light, 0);
-		ShaderProgram.stopShaders();
+		if(Keyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
+			float off = -10;
+			torch.light.range += off;
+			torch2.light.range += off;
+			torch3.light.range += off;
+			torch4.light.range += off;
+			torch5.light.range += off;
+			torch6.light.range += off;
+		}
+		
+		Renderer.addEntity(bg);
+		Renderer.addEntity(entity);
+		Renderer.addEntity(torch);
+		Renderer.addEntity(torch2);
+		Renderer.addEntity(torch3);
+		Renderer.addEntity(torch4);
+		Renderer.addEntity(torch5);
+		Renderer.addEntity(torch6);
+		
+		torch.renderLight();
+		torch2.renderLight();
+		torch3.renderLight();
+		torch4.renderLight();
+		torch5.renderLight();
+		torch6.renderLight();
+
+		Renderer.renderScene();
 		
 		Sync.sync(60);
 	}
@@ -49,20 +74,27 @@ public class Main implements Loop {
 	}
 
 	public Main() {
-		StaticShader.setLights(4);
+		StaticShader.setLights(6);
 		
 		Window window = new Window("Game", 1280, 720, true, false);
 		game = new Game(window, this);
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("/test.png"));
-		TexturedModel model = new TexturedModel(RectangleModel.rectangle, texture);
+		entity = new Entity("/Thing.png", new Vector2f(600, 300), 0, new Vector2f(1400, 1200));
+		bg = new Entity("/BG.png", new Vector2f(1280/2, 720/2), 0, new Vector2f(1280, 720));
 		
-		entity = new Entity(model, new Vector2f(200, 200), 0, new Vector2f(200, 200));
+		torch  = new Torch("/Torch.png", new Vector2f( 200, 650), 0, new Vector2f(50, 50));
+		torch2 = new Torch("/Torch.png", new Vector2f( 400, 650), 0, new Vector2f(50, 50));
+		torch3 = new Torch("/Torch.png", new Vector2f( 600, 650), 0, new Vector2f(50, 50));
+		torch4 = new Torch("/Torch.png", new Vector2f( 800, 650), 0, new Vector2f(50, 50));
+		torch5 = new Torch("/Torch.png", new Vector2f(1000, 650), 0, new Vector2f(50, 50));
+		torch6 = new Torch("/Torch.png", new Vector2f(1200, 650), 0, new Vector2f(50, 50));
 		
-		light = new Light(new Vector2f(0.5f, 0.5f), 1, new Vector3f(0, 0, 0));
-		StaticShader.basicShader.start();
-		StaticShader.basicShader.loadLight(light, 0);
-		ShaderProgram.stopShaders();
+		torch.light.color  = new Vector3f(1, 0, 0);
+		torch2.light.color = new Vector3f(0, 1, 0);
+		torch3.light.color = new Vector3f(1, 0, 0);
+		torch4.light.color = new Vector3f(0, 1, 0);
+		torch5.light.color = new Vector3f(1, 0, 0);
+		torch6.light.color = new Vector3f(0, 1, 0);
 		
 		game.start();
 	}

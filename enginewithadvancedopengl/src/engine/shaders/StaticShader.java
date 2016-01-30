@@ -7,10 +7,15 @@ import engine.objects.Light;
 public class StaticShader extends ShaderProgram{
 	
 	public static StaticShader basicShader = null;
-	public static int[] light_positions;
+	public static int amountOfLights = 0;
 	private static HashMap<String, String> consts = new HashMap<String, String>();
+	private static boolean lightInited = false;
+	private static boolean lightsOn = false;
 	
 	public static void init() {
+		if(!lightInited) {
+			setLights(1, false);
+		}
 		basicShader = new StaticShader();
 		pushAllConstants();
 		basicShader.compile(VERTEX_FILE, FRAGMENT_FILE);
@@ -42,10 +47,37 @@ public class StaticShader extends ShaderProgram{
 		super.getUniformLocation("transformationMatrix");
 		super.getUniformLocation("projectionMatrix");
 		
-		for(int i = 0;i < light_positions.length;i++) {
-			light_positions[i] = super.getUniformLocationRaw("lightPosition[" + i + "]");
-			System.out.println(i + ": " + super.getUniformLocationRaw("lightPosition[" + i + "]"));
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightPosition[" + i + "]");
 		}
+		
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightAttenuation[" + i + "]");
+		}
+		
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightColor[" + i + "]");
+		}
+		
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightIntensity[" + i + "]");
+		}
+		
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightZ[" + i + "]");
+		}
+		
+		for(int i = 0;i < amountOfLights;i++) {
+			super.getUniformLocation("lightRange[" + i + "]");
+		}
+		
+		//lightRange
+		
+		super.getUniformLocation("lightsOn");
+		
+		basicShader.start();
+		super.loadBool(uniforms.get("lightsOn"), lightsOn);
+		stopShaders();
 	}
 	
 	public void loadProjectionMatrix(float[] data) {
@@ -53,14 +85,24 @@ public class StaticShader extends ShaderProgram{
 	}
 	
 	public static void setLights(int amount) {
-		addConstant("__lightNum__", "" + amount);
-		light_positions = new int[amount];
+		setLights(amount, true);
 	}
 	
-	public void loadLight(Light lights, int index) {
-		//System.out.println(light_positions[index]);
-		super.loadVec2(light_positions[index], lights.pos.x, lights.pos.y);
-		//super.loadVec2(uniforms.get("lightPos"), lights.pos.x, lights.pos.y);
+	protected static void setLights(int amount, boolean lights) {
+		addConstant("__lightNum__", "" + amount);
+		amountOfLights = amount;
+		lightInited = true;
+		Light.initLightArray(amount);
+		lightsOn = lights;
+	}
+	
+	public void loadLight(Light light) {
+		super.loadVec2(uniforms.get("lightPosition[" + light.ID + "]"), light.pos.x, light.pos.y);
+		super.loadVec3(uniforms.get("lightAttenuation[" + light.ID + "]"), light.attenuation.x, light.attenuation.y, light.attenuation.z);
+		super.loadVec3(uniforms.get("lightColor[" + light.ID + "]"), light.color.x, light.color.y, light.color.z);
+		super.loadFloat(uniforms.get("lightIntensity[" + light.ID + "]"), light.intensity);
+		super.loadFloat(uniforms.get("lightZ[" + light.ID + "]"), light.z);
+		super.loadFloat(uniforms.get("lightRange[" + light.ID + "]"), light.range);
 	}
 	
 	public void loadTransformationMatrix(float[] data) {

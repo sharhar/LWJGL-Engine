@@ -10,20 +10,30 @@ import engine.objects.Entity;
 import engine.shaders.ShaderProgram;
 import engine.shaders.StaticShader;
 
-public class MasterRenderer extends Renderer {
+public class MasterRenderer {
 	
-	public static Map<RawModel, Map<Integer, List<Entity>>> entities = new HashMap<RawModel, Map<Integer, List<Entity>>>();;
+	public static Map<String, Map<RawModel, Map<Integer, List<Entity>>>> scenes = new HashMap<String, Map<RawModel, Map<Integer, List<Entity>>>>();
 	
-	public static void renderScene() {
+	public static void renderScene(String name) {
 		StaticShader.basicShader.start();
-		render(entities);
+		Renderer.render(scenes.get(name));
 		ShaderProgram.stopShaders();
-		entities.clear();
+		scenes.get(name).clear();
 	}
 	
-	public static void addEntity(Entity entity) {
+	public static void renderSceneNoClear(String name) {
+		StaticShader.basicShader.start();
+		Renderer.render(scenes.get(name));
+		ShaderProgram.stopShaders();
+	}
+	
+	public static void addEntity(Entity entity, String scene) {
+		if(scenes.get(scene) == null) {
+			Map<RawModel, Map<Integer, List<Entity>>> temp = new HashMap<RawModel, Map<Integer, List<Entity>>>();
+			scenes.put(scene, temp);
+		}
 		RawModel raw = entity.getModel().getRawModel();
-		Map<Integer, List<Entity>> texMap = entities.get(raw);
+		Map<Integer, List<Entity>> texMap = scenes.get(scene).get(raw);
 		if(texMap != null) {
 			List<Entity> ent = texMap.get(entity.getModel().getTexture().getID());
 			if(ent != null) {
@@ -38,7 +48,7 @@ public class MasterRenderer extends Renderer {
 			List<Entity> ltemp = new ArrayList<Entity>();
 			ltemp.add(entity);
 			temp.put(entity.getModel().getTexture().getID(), ltemp);
-			entities.put(raw, temp);
+			scenes.get(scene).put(raw, temp);
 		}
 	}
 }

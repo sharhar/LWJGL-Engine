@@ -1,5 +1,6 @@
 package engine.graphics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +20,15 @@ public class Renderer {
 	
 	public static float[] projectionMatrix = null;
 	
+	public static List<Entity> entities = new ArrayList<Entity>();
+	
 	public static void init(int width, int height) {
 		float right = (float) width;
 		float left = 0;
 		float top = (float) height;
 		float bottom = 0;
-		float near = -1;
-		float far = width*2.0f;
+		float near = -Float.MAX_VALUE/3;
+		float far = Float.MAX_VALUE/3;
 		
 		projectionMatrix = new float[16];
 		
@@ -52,6 +55,7 @@ public class Renderer {
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
 			Map<Integer, List<Entity>> texList = entities.get(raw);
+			//System.out.println(texList);
 			for(Integer tex:texList.keySet()) {
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
@@ -67,6 +71,19 @@ public class Renderer {
 			GL20.glDisableVertexAttribArray(1);
 			GL30.glBindVertexArray(0);
 		}
+	}
+	
+	public static void renderScene() {
+		StaticShader.basicShader.start();
+		for(Entity ent:entities) {
+			render(ent);
+		}
+		ShaderProgram.stopShaders();
+		entities.clear();
+	}
+	
+	public static void addEntity(Entity entity) {
+		entities.add(entity);
 	}
 	
 	public static void render(Entity entity) {

@@ -9,7 +9,6 @@ import java.util.TimerTask;
 
 import org.lwjgl.opengl.GL11;
 
-import engine.graphics.MasterRenderer;
 import engine.graphics.Renderer;
 import engine.input.Keyboard;
 import engine.input.Mouse;
@@ -75,7 +74,6 @@ public class Game {
 			glClear(GL_COLOR_BUFFER_BIT);
 			Mouse.tick();
 			loop.run();
-			MasterRenderer.renderScene();
 			glfwSwapBuffers(window.getWindow());
 			glfwPollEvents();
 			if(window.resized) {

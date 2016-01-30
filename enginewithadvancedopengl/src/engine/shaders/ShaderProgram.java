@@ -41,22 +41,10 @@ public abstract class ShaderProgram {
 	}
 	
 	protected int getUniformLocation(String uniformName) {
-		/*if(uniformName.indexOf(uniformName) == -1) {
-			int temp = GL20.glGetUniformLocation(programID, uniformName);
-			uniforms.put(uniformName, temp);
-			uniformNames.add(uniformName);
-			return temp;
-		}
-		
-		return uniforms.get(uniformName);*/
 		int location = GL20.glGetUniformLocation(programID, uniformName);
 		uniforms.put(uniformName, location);
 		return location;
 	}
-	
-	//protected int initArray2f(int location, int length) {
-		//GL20.glUniform2f
-	//}
 	
 	public void loadConstant(String name, String value) {
 		constants.put(name, value);
