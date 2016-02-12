@@ -21,8 +21,8 @@ public class StaticShader extends ShaderProgram{
 		basicShader.compile(VERTEX_FILE, FRAGMENT_FILE);
 	}
 	
-	private static final String VERTEX_FILE = "src/engine/shaders/basicShader.vert";
-	private static final String FRAGMENT_FILE = "src/engine/shaders/basicShader.frag";
+	private static final String VERTEX_FILE = "shaders/basicShader.vert";
+	private static final String FRAGMENT_FILE = "shaders/basicShader.frag";
 
 	public StaticShader() {
 		super();

@@ -13,7 +13,7 @@ public class Torch extends Entity{
 	
 	public Torch(String path, Vector2f position, float rotation, Vector2f scale) {
 		super(path, position, rotation, scale);
-		light = Light.createDefaultLight(position, 1, 100, new Vector3f(1, 1, 1));
+		light = Light.createDefaultLight(position, 20, 100, new Vector3f(1, 1, 1));
 	}
 	
 	public void renderLight() {
