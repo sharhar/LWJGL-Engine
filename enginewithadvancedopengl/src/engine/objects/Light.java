@@ -40,6 +40,11 @@ public class Light {
 		this.ID = getID();
 	}
 	
+	public void move(Vector2f move) {
+		pos.x += move.x;
+		pos.y += move.y;
+	}
+	
 	public static Light createDefaultLight(Vector2f pos, float intensity, float range) {
 		return new Light(pos, intensity, range, new Vector3f(1, 1, 1), new Vector3f(0.5f,  01f,  0), 100.0f);
 	}

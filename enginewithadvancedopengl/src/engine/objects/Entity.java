@@ -9,18 +9,20 @@ import engine.utils.Loader;
 public class Entity {
 	
 	protected TexturedModel model;
-	protected Vector2f position;
+	public Vector2f position;
 	protected float rotation;
 	protected Vector2f scale;
+	public CollisionShape shape;
 	
-	public Entity(TexturedModel model, Vector2f position, float rotation, Vector2f scale) {
+	public Entity(TexturedModel model, Vector2f position, float rotation, Vector2f scale, CollisionShape shape) {
 		this.model = model;
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
+		this.shape = shape;
 	}
 	
-	public Entity(String texture, Vector2f position, float rotation, Vector2f scale) {
+	public Entity(String texture, Vector2f position, float rotation, Vector2f scale, CollisionShape shape) {
 		if(texture != null && !texture.equals("")) {
 			this.model = new TexturedModel(RectangleModel.rectangle, new ModelTexture(Loader.loadTexture(texture)));
 		} else {
@@ -30,11 +32,15 @@ public class Entity {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
+		this.shape = shape;
 	}
 	
 	public void move(Vector2f move) {
 		position.x += move.x;
 		position.y += move.y;
+		
+		shape.pos.x += move.x;
+		shape.pos.y += move.y;
 	}
 	
 	public void rot(float rot) {

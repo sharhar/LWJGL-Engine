@@ -55,7 +55,6 @@ public class Renderer {
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
 			Map<Integer, List<Entity>> texList = entities.get(raw);
-			//System.out.println(texList);
 			for(Integer tex:texList.keySet()) {
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
@@ -63,6 +62,7 @@ public class Renderer {
 				for(Entity ent:entity) {
 					float[] transformationMatrix = Maths.createTransformationMatrix(ent.getPosition(), ent.getRotation(), ent.getScale());
 					StaticShader.basicShader.loadTransformationMatrix(transformationMatrix);
+					StaticShader.basicShader.loadTextureID(ent.getModel().getTexture().getID());
 					GL11.glDrawElements(GL11.GL_TRIANGLES, raw.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				}
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
@@ -94,6 +94,7 @@ public class Renderer {
 		GL20.glEnableVertexAttribArray(1);
 		float[] transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		StaticShader.basicShader.loadTransformationMatrix(transformationMatrix);
+		StaticShader.basicShader.loadTextureID(model.getTexture().getID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 		GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

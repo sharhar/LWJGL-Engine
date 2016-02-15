@@ -46,6 +46,7 @@ public class StaticShader extends ShaderProgram{
 	protected void getAllUniformLocations() {
 		super.getUniformLocation("transformationMatrix");
 		super.getUniformLocation("projectionMatrix");
+		super.getUniformLocation("texID");
 		
 		for(int i = 0;i < amountOfLights;i++) {
 			super.getUniformLocation("lightPosition[" + i + "]");
@@ -103,6 +104,10 @@ public class StaticShader extends ShaderProgram{
 		super.loadFloat(uniforms.get("lightIntensity[" + light.ID + "]"), light.intensity);
 		super.loadFloat(uniforms.get("lightZ[" + light.ID + "]"), light.z);
 		super.loadFloat(uniforms.get("lightRange[" + light.ID + "]"), light.range);
+	}
+	
+	public void loadTextureID(int ID) {
+		super.loadFloat(uniforms.get("texID"), ID);
 	}
 	
 	public void loadTransformationMatrix(float[] data) {

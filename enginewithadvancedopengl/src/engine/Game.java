@@ -18,6 +18,12 @@ import engine.utils.Loader;
 
 public class Game {
 	
+	public static Game current;
+	
+	public static void setCurrent(Game inst) {
+		current = inst;
+	}
+	
 	private Loop loop;
 	private Window window;
 	private boolean running = false;
@@ -44,6 +50,7 @@ public class Game {
 		Keyboard.init();
 		Mouse.setWindow(window);
 		fpsCounter = new Timer();
+		setCurrent(this);
 	}
 	
 	public void init(Window window, Loop loop) {

@@ -8,4 +8,15 @@ public class Vector2f {
 		this.y = y;
 	}
 	
+	public Vector2f multiply(float f) {
+		return new Vector2f(x * f, y * f);
+	}
+	
+	public Vector2f multiply(Vector2f vec) {
+		return new Vector2f(x * vec.x, y * vec.y);
+	}
+	
+	public Vector2f add(Vector2f vec) {
+		return new Vector2f(x + vec.x, y + vec.y);
+	}
 }

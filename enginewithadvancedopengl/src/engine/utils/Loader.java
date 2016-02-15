@@ -22,6 +22,14 @@ public class Loader {
 	
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();
+
+	public static int loadToVAO(float[] positions, float[] texCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, positions);
+		storeDataInAttributeList(1, texCoords);
+		unbindVAO();
+		return vaoID;
+	}
 	
 	public static RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();

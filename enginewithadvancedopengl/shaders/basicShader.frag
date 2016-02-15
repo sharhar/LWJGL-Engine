@@ -13,6 +13,7 @@ uniform float lightIntensity[__lightNum__];
 uniform float lightZ[__lightNum__];
 uniform float lightRange[__lightNum__];
 uniform float lightsOn;
+uniform float texID;
 
 void main(void) {
 	if(lightsOn != 0) {
@@ -57,10 +58,18 @@ void main(void) {
 		totalIntensity.z = min(totalIntensity.z, 1.0);
 		totalIntensity.w = min(totalIntensity.w, 1.0);
 		
-		vec4 tex = texture(textureSampler, pass_textureCoords);
+		vec4 tex = vec4(1);//= texture(textureSampler, pass_textureCoords);
+		
+		if(texID != 0) {
+			tex = texture(textureSampler, pass_textureCoords);
+		}
 		
 		out_color = vec4(((tex.xyz * totalIntensity.w) * vec3(totalIntensity.xyz)) , tex.w);
 	} else {
-		out_color = texture(textureSampler, pass_textureCoords);
+		if(texID != 0) {
+			out_color = texture(textureSampler, pass_textureCoords);
+		} else {
+			out_color = vec4(1);
+		}
 	}
 }
