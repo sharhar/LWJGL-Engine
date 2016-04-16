@@ -32,11 +32,28 @@ public class Sprite implements Renderable{
 	 * This constructor creates the sprite from a shape
 	 * @param shape shape to be used
 	 */
+	public Sprite(SpriteData shapes, Vector2f pos, float r) {
+		this.shapes = shapes;
+		sprites.add(this);
+		ID = getID();
+		setPos(pos);
+		
+		setR(r);
+	}
+	
 	public Sprite(SpriteData shapes, Vector2f pos) {
 		this.shapes = shapes;
 		sprites.add(this);
 		ID = getID();
 		setPos(pos);
+	}
+	
+	public void setR(float r) {
+		shapes.render.r = r;
+		
+		for(CollisionShape c:shapes.col) {
+			c.r = r;
+		}
 	}
 	
 	public void setPos(Vector2f pos) {

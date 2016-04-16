@@ -1,5 +1,8 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
@@ -9,7 +12,7 @@ import engine.graphics.MasterRenderer;
 import engine.input.KeyInput;
 import engine.objects.Sprite;
 import engine.objects.SpriteData;
-import engine.sound.SoundManager;
+import engine.time.Time;
 import engine.utils.SpriteLoader;
 import engine.window.Loop;
 
@@ -18,7 +21,28 @@ public class Main implements Loop {
 	public static SpriteData circle;
 	public static SpriteData square;
 	public static SpriteData triangle;
+	
+	public static SpriteData shotCircle;
+	public static SpriteData shotSquare;
+	public static SpriteData shotTriangle;
+	
 	public static Sprite player;
+	
+	class Shot {
+		public Sprite sprite;
+		public Vector2f speed;
+		
+		public Shot(Sprite sprite, Vector2f speed) {
+			this.sprite = sprite;
+			this.speed = speed;
+		}
+		
+		public void update() {
+			sprite.move(speed);
+		}
+	}
+	
+	public static List<Shot> shots;
 	
 	public static final byte SHAPE_TRIANGLE = 0;
 	public static final byte SHAPE_SQUARE = 1;
@@ -27,59 +51,22 @@ public class Main implements Loop {
 	public static byte lastShape = 1;
 	public static byte currentShape = 0;
 	
-	public static float lookAt(Vector2f dif) {
-		float m = dif.y/dif.x;
-		float  off = 0;
-		if(dif.x < 0) {
-			off = 180;
+	public static final float SHOT_SPEED = 15;
+	public float shotTime = 0;
+	
+	public void shoot(Vector2f dir) {
+		dir.normalise();
+		dir.scale(SHOT_SPEED);
+		if(currentShape == SHAPE_CIRCLE) {
+			shots.add(new Shot(new Sprite(new SpriteData(shotCircle), new Vector2f(player.pos), player.shapes.render.r), new Vector2f(dir)));
+		} else if(currentShape == SHAPE_SQUARE) {
+			shots.add(new Shot(new Sprite(new SpriteData(shotSquare), new Vector2f(player.pos), player.shapes.render.r), new Vector2f(dir)));
+		} else if(currentShape == SHAPE_TRIANGLE) {
+			shots.add(new Shot(new Sprite(new SpriteData(shotTriangle), new Vector2f(player.pos), player.shapes.render.r), new Vector2f(dir)));
 		}
-		
-		float angle = (float) (Math.toDegrees(Math.atan(m)) + off);
-		
-		if(angle < 0) {
-			angle = 360 + angle;
-		}
-		
-		return angle - 90;
 	}
 	
-	public void run() {
-		/*
-		if(screen == 0) {
-			menu.tick();
-			menu.render();
-			BasicRenderer.drawString(500, 500, "Jungle Battle", 80, Color.white);
-		} else if (screen == 1) {
-			settingsMenu.tick();
-			settingsMenu.render();
-			BasicRenderer.drawString(500, 500, "Settings", 80, Color.white);
-		} else if (screen == 2) {
-			
-			player.moveCol(new Vector2f(xVel,yVel));
-			
-			if(!player.grounded) {
-				yVel += gForce*Time.deltaTime;
-			} else {
-				yVel = 0;
-			}
-			
-			if(KeyInput.isKeyDown(Keyboard.KEY_W) && player.grounded) {
-				yVel = 1.7f;
-			}
-			
-			if(KeyInput.isKeyDown(Keyboard.KEY_A)) {
-				xVel = -speed*Time.deltaTime;
-			} else if(KeyInput.isKeyDown(Keyboard.KEY_D)) {
-				xVel = speed*Time.deltaTime;
-			} else {
-				xVel = 0;
-			}
-			
-			MasterRenderer.addSprite(stage);
-			MasterRenderer.addSprite(player);
-		}
-		*/
-		
+	public void playerControl() {
 		if(KeyInput.isKeyPressed(Keyboard.KEY_A)) {
 			currentShape -= 1;
 		}
@@ -109,14 +96,59 @@ public class Main implements Loop {
 		}
 		
 		Vector2f dif = new Vector2f(Mouse.getX() - player.pos.x, Mouse.getY() - player.pos.y);
-		float r = lookAt(dif);
-		player.shapes.render.r = r;
+		float m = dif.y/dif.x;
+		float  off = 0;
+		if(dif.x < 0) {
+			off = 180;
+		}
+		
+		float angle = (float) (Math.toDegrees(Math.atan(m)) + off);
+		
+		if(angle < 0) {
+			angle = 360 + angle;
+		}
+		
+		angle -= 90;
+		player.setR(angle);
 		
 		if(KeyInput.isKeyDown(Keyboard.KEY_W)) {
 			float speed = 2;
 			dif.normalise();
 			dif.scale(speed);
 			player.move(dif);
+		}
+		
+		if(KeyInput.isKeyDown(Keyboard.KEY_SPACE)) {
+			if(shotTime <= 0) {
+				shoot(dif);
+				shotTime = 0.1f;
+			} else {
+				shotTime -= Time.deltaTime;
+			}
+		} else {
+			shotTime = 0;
+		}
+	}
+	
+	public void run() {
+		playerControl();
+		
+		List<Integer> removes = new ArrayList<Integer>();
+		
+		for(int i = 0;i < shots.size();i++) {
+			Shot s = shots.get(i);
+			s.update();
+			if(s.sprite.pos.x < 0 || s.sprite.pos.y < 0 || s.sprite.pos.x > 1280 || s.sprite.pos.y > 720) {
+				removes.add(i);
+			}
+		}
+		
+		for(int r:removes) {
+			shots.remove(r);
+		}
+		
+		for(Shot s:shots) {
+			MasterRenderer.addSprite(s.sprite);
 		}
 		
 		MasterRenderer.addSprite(player);
@@ -130,73 +162,17 @@ public class Main implements Loop {
 		square = SpriteLoader.loadSpriteData("res/sprites/Player_Square", scale);
 		triangle = SpriteLoader.loadSpriteData("res/sprites/Player_Triangle", scale);
 		
+		Vector2f shotScale = new Vector2f(32, 32);
+		shotCircle = SpriteLoader.loadSpriteData("res/sprites/Shot_Circle", shotScale);
+		shotSquare = SpriteLoader.loadSpriteData("res/sprites/Shot_Square", shotScale);
+		shotTriangle = SpriteLoader.loadSpriteData("res/sprites/Shot_Triangle", shotScale);
+		
+		shots = new ArrayList<Shot>();
+		
 		player = new Sprite(triangle, new Vector2f(640, 360));
 		
 		Game.start();
 	}
-	
-	/*
-	public void createUI() {
-		menu = new WindowUI();
-		settingsMenu = new WindowUI();
-		Texture tex = new Texture("/images/MenuButton.png");
-		DirectLayout layout = new DirectLayout(new Vector2f(1280, 720));
-		
-		UIImage bg = new UIImage("/images/BG.png", layout.getBounds(0, 0, 1280, 720));
-		
-		Button play = new Button(layout.getBounds(50,400,200,60), "Play", 35, tex.ID);
-		play.addAction(new UIAction() {
-			
-			public void mouseActionPreformed(UIMouseEvent m) {
-				screen = 2;
-			}
-			
-			public void keyActionPreformed(UIKeyEvent k) {}
-			public void actionPreformed() {}
-		});
-		
-		Button settings = new Button(layout.getBounds(50,300,200,60), "Settings", 35, tex.ID);
-		settings.addAction(new UIAction() {
-			
-			public void mouseActionPreformed(UIMouseEvent m) {
-				screen = 1;
-			}
-			
-			public void keyActionPreformed(UIKeyEvent k) {}
-			public void actionPreformed() {}
-		});
-		
-		Button quit = new Button(layout.getBounds(50,200,200,60), "Quit", 35, tex.ID);
-		quit.addAction(new UIAction() {
-			
-			public void mouseActionPreformed(UIMouseEvent m) {
-				Game.close();
-			}
-			
-			public void keyActionPreformed(UIKeyEvent k) {}
-			public void actionPreformed() {}
-		});
-		
-		menu.addObject(bg);
-		menu.addObject(play);
-		menu.addObject(settings);
-		menu.addObject(quit);
-		
-		Button back = new Button(layout.getBounds(50,100,200,60), "Back", 35, tex.ID);
-		back.addAction(new UIAction() {
-			
-			public void mouseActionPreformed(UIMouseEvent m) {
-				screen = 0;
-			}
-			
-			public void keyActionPreformed(UIKeyEvent k) {}
-			public void actionPreformed() {}
-		});
-		
-		settingsMenu.addObject(bg);
-		settingsMenu.addObject(back);
-	}
-	*/
 	
 	public static void main(String[] args) {
 		new Main();

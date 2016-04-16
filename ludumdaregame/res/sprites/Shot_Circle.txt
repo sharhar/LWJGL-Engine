@@ -1,0 +1,2 @@
+EntityName=Shot_Circle
+PolyNum=1

@@ -14,6 +14,9 @@ public class CollisionShapePoly extends CollisionShape{
 		this.colVert = new Vector2f[other.length];
 	}
 
+	public CollisionShapePoly(CollisionShape other) {
+		super(other);
+	}
 
 	public void setScaleX(float scale) {
 		for(int i = 0;i < other.length;i++) {

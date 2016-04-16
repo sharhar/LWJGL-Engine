@@ -26,6 +26,28 @@ abstract public class RenderShape implements Renderable{
 	 * @param r rotation (or radius if circle)
 	 * @param color color of shape
 	 */
+	
+	public RenderShape(RenderShape other) {
+		this.shapeType = other.shapeType;
+		this.pos = new Vector2f(other.pos);
+		this.r = other.r;
+		this.color = new Color(other.color);
+		this.ID = other.ID;
+		
+		this.other = new Vector2f[other.other.length];
+		for(int i = 0;i < this.other.length;i++) {
+			this.other[i] = new Vector2f(other.other[i]);
+		}
+		if(other.otherPreCalc == null) {
+			this.otherPreCalc = null;
+		} else {
+			this.otherPreCalc = new Vector2f[other.otherPreCalc.length];
+			for(int i = 0;i < this.otherPreCalc.length;i++) {
+				this.otherPreCalc[i] = new Vector2f(other.otherPreCalc[i]);
+			}
+		}
+	}
+	
 	public RenderShape(String shapeType, Vector2f pos, float r, Color color) {
 		this.shapeType = shapeType;
 		this.pos = pos;

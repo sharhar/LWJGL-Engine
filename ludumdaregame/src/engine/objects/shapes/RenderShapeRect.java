@@ -24,6 +24,10 @@ public class RenderShapeRect extends RenderShape{
 		other[0] = size;
 	}
 	
+	public RenderShapeRect(RenderShape other) {
+		super(other);
+	}
+	
 	/**
 	 * This function renders the rectangle
 	 */

@@ -11,6 +11,12 @@ public class Color {
 	
 	public float r, g, b;
 	
+	public Color(Color c) {
+		this.r = c.r;
+		this.g = c.g;
+		this.b = c.b;
+	}
+	
 	/**
 	 * Initializes RGB values
 	 * @param r red
