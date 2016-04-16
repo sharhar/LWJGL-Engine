@@ -68,7 +68,7 @@ public class Game {
 		fpsCounter.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				if(printFPS) {
-					System.out.println(fps);
+					System.out.println("ENGINE>> FPS: " + fps);
 				}
 				fps = 0;
 			}

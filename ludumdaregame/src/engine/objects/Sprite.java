@@ -8,7 +8,6 @@ import org.lwjgl.util.vector.Vector2f;
 import engine.graphics.Renderable;
 import engine.math.physics.Collider;
 import engine.objects.shapes.CollisionShape;
-import engine.objects.shapes.RenderShape;
 
 /**
  * This class is used to create sprites
@@ -19,8 +18,8 @@ public class Sprite implements Renderable{
 	public static List<Sprite> sprites = new ArrayList<Sprite>();
 	protected static boolean[] IDs;
 	
-	public RenderShape renderShape;
-	public CollisionShape[] col;
+	public Vector2f pos;
+	public SpriteData shapes;
 	public int ID;
 	public boolean dead = false;
 	public boolean grounded = false;
@@ -33,21 +32,32 @@ public class Sprite implements Renderable{
 	 * This constructor creates the sprite from a shape
 	 * @param shape shape to be used
 	 */
-	public Sprite(RenderShape shape, CollisionShape[] col) {
-		this.renderShape = shape;
-		this.col = col;
+	public Sprite(SpriteData shapes, Vector2f pos) {
+		this.shapes = shapes;
 		sprites.add(this);
 		ID = getID();
+		setPos(pos);
 	}
 	
 	public void setPos(Vector2f pos) {
-		renderShape.pos.x = pos.x;
-		renderShape.pos.y = pos.y;
+		shapes.render.pos.x = pos.x;
+		shapes.render.pos.y = pos.y;
 		
-		for(int i = 0; i < col.length;i++) {
-			col[i].pos.x = pos.x;
-			col[i].pos.y = pos.y;
+		for(int i = 0; i < shapes.col.length;i++) {
+			shapes.col[i].pos.x = pos.x;
+			shapes.col[i].pos.y = pos.y;
 		}
+		
+		this.pos = pos;
+	}
+	
+	public void setSpriteData(SpriteData newData) {
+		newData.render.pos = pos;
+		for(CollisionShape c:newData.col) {
+			c.pos = pos;
+		}
+		newData.render.r = shapes.render.r;
+		shapes = newData;
 	}
 	
 	/**
@@ -55,12 +65,15 @@ public class Sprite implements Renderable{
 	 * @param move amount to move
 	 */
 	public void move(Vector2f move) {
-		renderShape.pos.x += move.x;
-		renderShape.pos.y += move.y;
+		pos.x += move.x;
+		pos.y += move.y;
 		
-		for(int i = 0; i < col.length;i++) {
-			col[i].pos.x += move.x;
-			col[i].pos.y += move.y;
+		shapes.render.pos.x += move.x;
+		shapes.render.pos.y += move.y;
+		
+		for(int i = 0; i < shapes.col.length;i++) {
+			shapes.col[i].pos.x += move.x;
+			shapes.col[i].pos.y += move.y;
 		}
 	}
 	
@@ -68,48 +81,46 @@ public class Sprite implements Renderable{
 	 * This function is used to render the sprite
 	 */
 	public void render() {
-		renderShape.render();
+		shapes.render.render();
 	}
 
 	/**
 	 * This function is used to render the sprite with the MasterRenderer
 	 */
 	public void masterRender() {
-		renderShape.render();
+		shapes.render.render();
 	}
 	
 	/**
 	 * This function moves the sprite, but it also takes into account the other sprites in the scene
 	 */
 	public void moveCol(Vector2f move) {
-		renderShape.pos.x += move.x;
-		for(int i = 0; i < col.length;i++) {
-			col[i].pos.x += move.x;
+		
+		pos.x += move.x;
+		shapes.render.pos.x += move.x;
+		for(int i = 0; i < shapes.col.length;i++) {
+			shapes.col[i].pos.x += move.x;
 		}
 		if(anyCollision()) {
-			renderShape.pos.x -= move.x;
-			for(int i = 0; i < col.length;i++) {
-				col[i].pos.x -= move.x;
+			pos.x -= move.x;
+			shapes.render.pos.x -= move.x;
+			for(int i = 0; i < shapes.col.length;i++) {
+				shapes.col[i].pos.x -= move.x;
 			}
 		}
 		
-		renderShape.pos.y += move.y;
-		for(int i = 0; i < col.length;i++) {
-			col[i].pos.y += move.y;
+		pos.y += move.y;
+		shapes.render.pos.y += move.y;
+		for(int i = 0; i < shapes.col.length;i++) {
+			shapes.col[i].pos.y += move.y;
 		}
+		
 		if(anyCollision()) {
-			renderShape.pos.y -= move.y;
-			for(int i = 0; i < col.length;i++) {
-				col[i].pos.y -= move.y;
+			pos.y -= move.y;
+			shapes.render.pos.y -= move.y;
+			for(int i = 0; i < shapes.col.length;i++) {
+				shapes.col[i].pos.y -= move.y;
 			}
-			
-			if(move.y < 0) {
-				grounded = true;
-			} else {
-				grounded = false;
-			}
-		} else {
-			grounded = false;
 		}
 	}
 	

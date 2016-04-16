@@ -34,7 +34,7 @@ public class Main implements Loop {
 	FontType arial;
 	
 	float speed = 17f;
-	Vector2f bSpeed = new Vector2f(1, 1);
+	Vector2f bSpeed = new Vector2f(2, 1);
 	int p1Score = 0;
 	int p2Score = 0;
 	
@@ -96,12 +96,12 @@ public class Main implements Loop {
 			ball.move(new Vector2f(-600, 0));
 		}
 		
-		if(Keyboard.isKeyPressed(GLFW_KEY_D)) {
+		if(Keyboard.isKeyPressed(GLFW_KEY_D) || Keyboard.isKeyPressed(GLFW_KEY_A)) {
 			p1Score--;
 			bSpeed.y = 0;
 		}
 		
-		if(Keyboard.isKeyPressed(GLFW_KEY_RIGHT)) {
+		if(Keyboard.isKeyPressed(GLFW_KEY_RIGHT) || Keyboard.isKeyPressed(GLFW_KEY_LEFT)) {
 			p2Score--;
 			bSpeed.y = 0;
 		}

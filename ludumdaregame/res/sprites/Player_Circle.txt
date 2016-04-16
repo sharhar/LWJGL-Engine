@@ -1,0 +1,2 @@
+EntityName=Player_Circle
+PolyNum=1

@@ -21,9 +21,9 @@ public class Collider {
 	 */
 	
 	public static boolean spriteSpriteCol(Sprite sp1, Sprite sp2) {
-		for(int i = 0; i < sp1.col.length;i++) {
-			for(int j = 0;j < sp2.col.length;j++) {
-				if(shapeShapeCol(sp1.col[i], sp2.col[j])) {
+		for(int i = 0; i < sp1.shapes.col.length;i++) {
+			for(int j = 0;j < sp2.shapes.col.length;j++) {
+				if(shapeShapeCol(sp1.shapes.col[i], sp2.shapes.col[j])) {
 					return true;
 				}
 			}

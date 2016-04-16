@@ -24,7 +24,7 @@ void main(void) {
 			float intensity = 1.0/(lightAttenuation[i].x + distance*lightAttenuation[i].y + distance*distance*lightAttenuation[i].z);
 		
 			intensity *= lightIntensity[i] * 100;
-		
+			
 			intensity = max(intensity, 0.0);
 			intensity = min(intensity, 1.0);
 			
@@ -58,7 +58,7 @@ void main(void) {
 		totalIntensity.z = min(totalIntensity.z, 1.0);
 		totalIntensity.w = min(totalIntensity.w, 1.0);
 		
-		vec4 tex = vec4(1);//= texture(textureSampler, pass_textureCoords);
+		vec4 tex = vec4(1);
 		
 		if(texID != 0) {
 			tex = texture(textureSampler, pass_textureCoords);

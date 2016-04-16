@@ -3,31 +3,27 @@ package engine.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class FileUtils {
 	
 	public static String loadAsString(String file) {
-		File test = new File(file);
-		
-		if(!test.exists()){
-			return null;
-		}
-		
-		String result = "";
-		
+		StringBuilder text = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-			String buffer = "";
-			while ((buffer = reader.readLine()) != null) {
-				result += buffer + "\n";
+			String line;
+			while((line = reader.readLine()) != null) {
+				text.append(line).append("\n");
 			}
 			reader.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			System.err.println("Could not read file!");
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		
-		return result;
+		return new String(text);
 	}
 	
 	public static void writeSrting(String path, String text) {

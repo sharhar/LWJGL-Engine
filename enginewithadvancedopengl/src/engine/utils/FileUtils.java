@@ -3,9 +3,27 @@ package engine.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class FileUtils {
+	
+	public static String readFile(String path) {
+		StringBuilder result = new StringBuilder();
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			String line;
+			while((line = reader.readLine()) != null) {
+				result.append(line).append("\n");
+			}
+			reader.close();
+		} catch (IOException e) {
+			System.err.println("Could not read file!");
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return result.toString();
+	}
 	
 	public static String loadAsString(String file) {
 		File test = new File(file);

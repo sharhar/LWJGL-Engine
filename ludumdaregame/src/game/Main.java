@@ -1,44 +1,50 @@
 package game;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.Game;
-import engine.UI.Button;
-import engine.UI.DirectLayout;
-import engine.UI.UIAction;
-import engine.UI.UIImage;
-import engine.UI.UIKeyEvent;
-import engine.UI.UIMouseEvent;
-import engine.UI.WindowUI;
-import engine.graphics.BasicRenderer;
-import engine.graphics.Color;
 import engine.graphics.MasterRenderer;
-import engine.graphics.Texture;
 import engine.input.KeyInput;
 import engine.objects.Sprite;
-import engine.sound.Sound;
+import engine.objects.SpriteData;
 import engine.sound.SoundManager;
-import engine.time.Time;
 import engine.utils.SpriteLoader;
 import engine.window.Loop;
 
 public class Main implements Loop {
 	
-	int screen = 0;
-	WindowUI menu;
-	WindowUI settingsMenu;
-	Sound menuMusic;
+	public static SpriteData circle;
+	public static SpriteData square;
+	public static SpriteData triangle;
+	public static Sprite player;
 	
-	Sprite stage;
-	Sprite player;
+	public static final byte SHAPE_TRIANGLE = 0;
+	public static final byte SHAPE_SQUARE = 1;
+	public static final byte SHAPE_CIRCLE = 2;
 	
-	float yVel = 0;
-	float xVel = 0;
-	float speed = 75;
-	float gForce = -4f;
+	public static byte lastShape = 1;
+	public static byte currentShape = 0;
+	
+	public static float lookAt(Vector2f dif) {
+		float m = dif.y/dif.x;
+		float  off = 0;
+		if(dif.x < 0) {
+			off = 180;
+		}
+		
+		float angle = (float) (Math.toDegrees(Math.atan(m)) + off);
+		
+		if(angle < 0) {
+			angle = 360 + angle;
+		}
+		
+		return angle - 90;
+	}
 	
 	public void run() {
+		/*
 		if(screen == 0) {
 			menu.tick();
 			menu.render();
@@ -72,24 +78,64 @@ public class Main implements Loop {
 			MasterRenderer.addSprite(stage);
 			MasterRenderer.addSprite(player);
 		}
+		*/
+		
+		if(KeyInput.isKeyPressed(Keyboard.KEY_A)) {
+			currentShape -= 1;
+		}
+		
+		if(KeyInput.isKeyPressed(Keyboard.KEY_D)) {
+			currentShape += 1;
+		}
+		
+		if(currentShape < 0) {
+			currentShape += 3;
+		}
+		
+		if(currentShape >= 3) {
+			currentShape -= 3;
+		}
+		
+		if(currentShape != lastShape) {
+			if(currentShape == SHAPE_CIRCLE) {
+				player.setSpriteData(circle);
+			} else if(currentShape == SHAPE_SQUARE) {
+				player.setSpriteData(square);
+			} else if(currentShape == SHAPE_TRIANGLE) {
+				player.setSpriteData(triangle);
+			}
+			
+			lastShape = currentShape;
+		}
+		
+		Vector2f dif = new Vector2f(Mouse.getX() - player.pos.x, Mouse.getY() - player.pos.y);
+		float r = lookAt(dif);
+		player.shapes.render.r = r;
+		
+		if(KeyInput.isKeyDown(Keyboard.KEY_W)) {
+			float speed = 2;
+			dif.normalise();
+			dif.scale(speed);
+			player.move(dif);
+		}
+		
+		MasterRenderer.addSprite(player);
 	}
-
+	
 	public Main() {
 		Game.init("Game", 1280, 720, false, "/Icon.png", this);
 		
-		createUI();
-		menuMusic = new Sound("music/DK Theme.wav");
-		menuMusic.setLooping(true);
-		menuMusic.play();
+		Vector2f scale = new Vector2f(64, 64);
+		circle = SpriteLoader.loadSpriteData("res/sprites/Player_Circle", scale);
+		square = SpriteLoader.loadSpriteData("res/sprites/Player_Square", scale);
+		triangle = SpriteLoader.loadSpriteData("res/sprites/Player_Triangle", scale);
 		
-		SoundManager.setUniversalSoundVolume(0);
-		
-		stage = SpriteLoader.loadSprite("C:\\Users\\wiish\\Git\\LWJGL2DEngine\\ludumdaregame\\res\\sprites\\Stage1", new Vector2f(0, 0), new Vector2f(1280, 720));
-		player = SpriteLoader.loadSprite("C:\\Users\\wiish\\Git\\LWJGL2DEngine\\ludumdaregame\\res\\sprites\\Player", new Vector2f(600, 300), new Vector2f(100, 100));
+		player = new Sprite(triangle, new Vector2f(640, 360));
 		
 		Game.start();
 	}
 	
+	/*
 	public void createUI() {
 		menu = new WindowUI();
 		settingsMenu = new WindowUI();
@@ -150,6 +196,7 @@ public class Main implements Loop {
 		settingsMenu.addObject(bg);
 		settingsMenu.addObject(back);
 	}
+	*/
 	
 	public static void main(String[] args) {
 		new Main();

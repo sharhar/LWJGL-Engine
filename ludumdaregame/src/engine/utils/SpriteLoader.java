@@ -12,6 +12,7 @@ import engine.Game;
 import engine.graphics.Color;
 import engine.graphics.Texture;
 import engine.objects.Sprite;
+import engine.objects.SpriteData;
 import engine.objects.shapes.CollisionShape;
 import engine.objects.shapes.CollisionShapePoly;
 import engine.objects.shapes.RenderShape;
@@ -19,10 +20,8 @@ import engine.objects.shapes.RenderShapeRect;
 
 public class SpriteLoader {
 	
-	public static Sprite loadSprite(String path, Vector2f pos, Vector2f scale) {
+	public static SpriteData loadSpriteData(String path, Vector2f scale) {
 		try {
-			Sprite result = null;
-			
 			String info = FileUtils.loadAsString(path + ".txt");
 			String[] infoLines = info.split("\n");
 			String name = infoLines[0].split("=")[1];
@@ -55,25 +54,27 @@ public class SpriteLoader {
 				}
 			}
 			
-			RenderShape renderShape = new RenderShapeRect(pos, scale, new Color(1,1,1));
+			RenderShape renderShape = new RenderShapeRect(new Vector2f(), scale, new Color(1,1,1));
 			renderShape.ID = Texture.loadFromImageStatic(image);
 			CollisionShape[] col = new CollisionShape[polyNumber];
 			
 			for(int i = 0;i < col.length;i++) {
-				CollisionShapePoly temp = new CollisionShapePoly(pos, 0, vects[i]);
+				CollisionShapePoly temp = new CollisionShapePoly(new Vector2f(), 0, vects[i]);
 				temp.setScaleX(scale.x);
 				temp.setScaleY(scale.y);
 				col[i] = temp;
 			}
 			
-			result = new Sprite(renderShape,col);
-			
-			return result;
+			return new SpriteData(renderShape,col);
 		} catch (Exception e) {
 			System.err.println("Could not load sprite " + path);
 			e.printStackTrace();
 			Game.close();
 			return null;
-		}		
+		}
+	}
+	
+	public static Sprite loadSprite(String path, Vector2f pos, Vector2f scale) {
+		return new Sprite(loadSpriteData(path, scale), pos);		
 	}
 }

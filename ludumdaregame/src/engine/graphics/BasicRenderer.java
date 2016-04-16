@@ -68,7 +68,7 @@ public class BasicRenderer {
 		float W = w / 2;
 		float H = h / 2;
 
-		glTranslatef(x + W, y + H, 0);
+		glTranslatef(x, y, 0);
 		glRotatef(r, 0, 0, 1);
 
 		glBegin(GL_QUADS);
@@ -103,7 +103,7 @@ public class BasicRenderer {
 		float W = w / 2;
 		float H = h / 2;
 
-		glTranslatef(x + W, y + H, 0);
+		glTranslatef(x, y, 0);
 		glRotatef(r, 0, 0, 1);
 		
 		glColor3f(c.r, c.g, c.b);

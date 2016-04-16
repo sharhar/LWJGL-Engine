@@ -160,7 +160,7 @@ public class Window {
 			resized = false;
 		}
 		Display.update();
-		Display.sync(120);
+		Display.sync(60);
 	}
 	
 	/**
