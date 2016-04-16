@@ -25,10 +25,8 @@ public class MasterRenderer {
 			List<Renderable> batch = renderables.get(ID);
 			
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, ID);
-			int n = 0;
 			for(Renderable renderable:batch) {
 				renderable.masterRender();
-				n++;
 			}
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		}

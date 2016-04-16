@@ -33,6 +33,11 @@ public class Collider {
 	}
 	
 	public static boolean shapeShapeCol(CollisionShape s1, CollisionShape s2) {
+		s1.updateCollisionStuff();
+		s2.updateCollisionStuff();
+		
+		return boundingBoxCol(s1, s2);
+		/*
 		if(s1.shapeType.equals("Rect") && s2.shapeType.equals("Rect") && s1.r == 0 && s2.r == 0) {
 			return rectRectCol(s1, s2);
 		} else if(s1.shapeType.equals("Cir") && s2.shapeType.equals("Cir")) {
@@ -44,6 +49,7 @@ public class Collider {
 		}
 		
 		return polygonCol(s1, s2);
+		*/
 	}
 	
 	/**
@@ -79,6 +85,23 @@ public class Collider {
 	 * @param sh2 shape 2
 	 * @return whether they are colliding
 	 */
+	public static boolean boundingBoxCol(CollisionShape sh1, CollisionShape sh2) {
+		Vector2f p1 = new Vector2f(sh1.pos.x - sh1.boundingBox.x/2, sh1.pos.y - sh1.boundingBox.y/2);
+		Vector2f p2 = new Vector2f(sh2.pos.x - sh2.boundingBox.x/2, sh2.pos.y - sh2.boundingBox.y/2);
+		Vector2f s1 = sh1.boundingBox;
+		Vector2f s2 = sh2.boundingBox;
+		
+		if(p1.x + s1.x< p2.x || p2.x + s2.x < p1.x) {
+			return false;
+		}
+		
+		if(p1.y + s1.y < p2.y || p2.y + s2.y < p1.y) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public static boolean rectRectCol(CollisionShape sh1, CollisionShape sh2) {
 		Vector2f p1 = sh1.pos;
 		Vector2f p2 = sh2.pos;
@@ -103,9 +126,6 @@ public class Collider {
 	 * @return whether they are colliding
 	 */
 	public static boolean polygonCol(CollisionShape s1, CollisionShape s2) {
-		s1.updateCol();
-		s2.updateCol();
-
 		CollisionShape[] shapes = new CollisionShape[2];
 		shapes[0] = s1;
 		shapes[1] = s2;

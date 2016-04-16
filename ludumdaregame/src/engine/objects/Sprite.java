@@ -60,9 +60,11 @@ public class Sprite implements Renderable{
 		shapes.render.pos.x = pos.x;
 		shapes.render.pos.y = pos.y;
 		
+		float scale = shapes.col[0].scale;
+		
 		for(int i = 0; i < shapes.col.length;i++) {
-			shapes.col[i].pos.x = pos.x;
-			shapes.col[i].pos.y = pos.y;
+			shapes.col[i].pos.x = pos.x + scale;
+			shapes.col[i].pos.y = pos.y + scale;
 		}
 		
 		this.pos = pos;

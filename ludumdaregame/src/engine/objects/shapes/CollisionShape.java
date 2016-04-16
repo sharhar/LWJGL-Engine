@@ -13,6 +13,8 @@ public abstract class CollisionShape {
 	public float colCalcR = Float.MAX_VALUE;
 	public float scale = 0;
 	
+	public Vector2f boundingBox = new Vector2f();
+	
 	public CollisionShape(String shapeType, Vector2f pos, float r) {
 		this.shapeType = shapeType;
 		this.pos = pos;
@@ -45,6 +47,35 @@ public abstract class CollisionShape {
 				this.colVert[i] = new Vector2f(other.colVert[i]);
 			}
 		}
+	}
+	
+	public void updateCollisionStuff() {
+		updateCol();
+		
+		float xmax = Float.MIN_VALUE;
+		float ymax = Float.MIN_VALUE;
+		float xmin = Float.MAX_VALUE;
+		float ymin = Float.MAX_VALUE;
+		
+		for(Vector2f p:colVert) {
+			if(p.x > xmax) {
+				xmax = p.x;
+			}
+			
+			if(p.x < xmin) {
+				xmin = p.x;
+			}
+			
+			if(p.y > ymax) {
+				ymax = p.y;
+			}
+			
+			if(p.y < ymin) {
+				ymin = p.y;
+			}
+		}
+		
+		boundingBox = new Vector2f(xmax - xmin, ymax - ymin);
 	}
 	
 	public abstract void updateCol();

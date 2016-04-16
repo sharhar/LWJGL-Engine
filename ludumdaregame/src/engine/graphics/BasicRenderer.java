@@ -107,7 +107,49 @@ public class BasicRenderer {
 		glRotatef(r, 0, 0, 1);
 		
 		glColor3f(c.r, c.g, c.b);
+		
+		glBindTexture(GL_TEXTURE_2D, texID);
+			
+		glBegin(GL_QUADS);
+		{
+			if (texID != 0) {
+				glTexCoord2f(1, 1);
+				glVertex2f(W, -H);
+				glTexCoord2f(1, 0);
+				glVertex2f(W, H);
+				glTexCoord2f(0, 0);
+				glVertex2f(-W, H);
+				glTexCoord2f(0, 1);
+				glVertex2f(-W, -H);
+			} else {
+				glVertex2f(W, -H);
+				glVertex2f(W, H);
+				glVertex2f(-W, H);
+				glVertex2f(-W, -H);
+			}
+		}
+		glEnd();
 
+		if (texID != 0) {
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		
+		glColor3f(1, 1, 1);
+
+		glPopMatrix();
+	}
+	
+	public static void renderRect(float x, float y, float w, float h, float r, int texID, float alpha) {
+		glPushMatrix();
+		
+		float W = w / 2;
+		float H = h / 2;
+
+		glTranslatef(x, y, 0);
+		glRotatef(r, 0, 0, 1);
+		
+		glColor4f(1, 1, 1, alpha);
+		
 		glBindTexture(GL_TEXTURE_2D, texID);
 			
 		glBegin(GL_QUADS);

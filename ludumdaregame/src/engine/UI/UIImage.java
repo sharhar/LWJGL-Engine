@@ -7,7 +7,6 @@ import engine.graphics.Texture;
 public class UIImage extends UIObject{
 
 	int tex = 0;
-	public Bounds bounds;
 	
 	public UIImage(String path, Bounds bounds) {
 		this(new Texture(path),bounds);
