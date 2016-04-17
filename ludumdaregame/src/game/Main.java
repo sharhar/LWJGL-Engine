@@ -1,6 +1,8 @@
 package game;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ import engine.input.KeyInput;
 import engine.math.physics.Collider;
 import engine.objects.Sprite;
 import engine.objects.SpriteData;
+import engine.sound.Sound;
 import engine.time.Time;
 import engine.utils.SpriteLoader;
 import engine.window.Loop;
@@ -53,8 +56,26 @@ public class Main implements Loop {
 	public static WindowUI loseUI;
 	public static WindowUI optionsUI;
 	
+	public static Sound music;
+	public static Sound die;
+	public static Sound shift;
+	public static Sound shoot;
+	
+	public static Texture bg;
+	public static Texture title;
+	public static Texture rb;
+	public static Texture gb;
+	public static Texture bb;
+	
+	public static boolean musicOn = true;
+	public static boolean sfxOn = true;
+	
+	public static Button musicToggle;
+	public static Button sfxToggle;
+	
 	public static Sprite player;
 	public static int score = 0;
+	public static int highScore = 0;
 	
 	public static Random rand = new Random();
 	
@@ -130,6 +151,7 @@ public class Main implements Loop {
 			
 			if(sprite.pos.x < -50 || sprite.pos.y < -50 || sprite.pos.x > 1330 || sprite.pos.y > 770) {
 				dead = true;
+				die.play();
 			}
 			
 			if(!dead) {
@@ -138,6 +160,9 @@ public class Main implements Loop {
 						if(Collider.spriteSpriteCol(s.sprite, sprite)) {
 							if(s.type != type) {
 								score++;
+								if(sfxOn) {
+									die.play();
+								}
 								dead = true;
 							}
 							
@@ -216,6 +241,10 @@ public class Main implements Loop {
 	}
 	
 	public void shoot(Vector2f dir) {
+		if(sfxOn) {
+			shoot.play();
+		}
+		
 		dir.normalise();
 		dir.scale(SHOT_SPEED);
 		if(currentShape == SHAPE_CIRCLE) {
@@ -245,6 +274,10 @@ public class Main implements Loop {
 		}
 		
 		if(currentShape != lastShape) {
+			if(sfxOn) {
+				shift.play();
+			}
+			
 			if(currentShape == SHAPE_CIRCLE) {
 				gameUI.objects.get(0).bounds = layout.getBounds(1280 - 180, 50, 30, 30);
 				gameUI.objects.get(1).bounds = layout.getBounds(1280 - 130, 50, 30, 30);
@@ -305,22 +338,45 @@ public class Main implements Loop {
 			if(e.type != currentShape) {
 				if(Collider.spriteSpriteCol(e.sprite, player)) {
 					sceen = 2;
+					if(score > highScore) {
+						highScore = score;
+					}
 				}
 			}
 		}
 	}
 	
 	public void spawnEnemy() {
-		byte type = (byte) rand.nextInt(3);
+		byte type = (byte) rand.nextInt(2);
 		
 		SpriteData data = null;
-		if(type == SHAPE_CIRCLE) {
-			data = new SpriteData(circle);
-		} else if(type == SHAPE_SQUARE) {
-			data = new SpriteData(square);
-		} else if(type == SHAPE_TRIANGLE) {
-			data = new SpriteData(triangle);
+		
+		if(currentShape == SHAPE_TRIANGLE) {
+			if(type == 0) {
+				type = SHAPE_SQUARE;
+				data = new SpriteData(square);
+			} else if(type == 1) {
+				type = SHAPE_CIRCLE;
+				data = new SpriteData(circle);
+			}
+		} else if(currentShape == SHAPE_SQUARE) {
+			if(type == 0) {
+				type = SHAPE_TRIANGLE;
+				data = new SpriteData(triangle);
+			} else if(type == 1) {
+				type = SHAPE_CIRCLE;
+				data = new SpriteData(circle);
+			}
+		} else if(currentShape == SHAPE_CIRCLE) {
+			if(type == 0) {
+				type = SHAPE_TRIANGLE;
+				data = new SpriteData(triangle);
+			} else if(type == 1) {
+				type = SHAPE_SQUARE;
+				data = new SpriteData(square);
+			}
 		}
+		
 		
 		int side = rand.nextInt(4);
 		
@@ -357,7 +413,7 @@ public class Main implements Loop {
 			enemyTime = enemyWait;
 		}
 		
-		enemyWait -= Time.deltaTime/1000;
+		enemyWait -= Time.deltaTime/100;
 		
 		removes.clear();
 		
@@ -408,9 +464,14 @@ public class Main implements Loop {
 	}
 	
 	public void run() {
+		BasicRenderer.renderRect(640, 360, 1280, 720, 0, bg.ID, Color.white);
+		
 		if(sceen == 0) {
 			menuUI.tick();
 			menuUI.render();
+			BasicRenderer.drawString(200, 100, "Highscore: " + highScore, 50, TrueTypeFont.ALIGN_CENTER, Color.white);
+			
+			BasicRenderer.renderRect(800, 640, 1280/2.5f, 720/2.5f, 0, title.ID, Color.white);
 		} else if(sceen == 1) {
 			playerControl();
 			update();
@@ -433,17 +494,29 @@ public class Main implements Loop {
 	}
 	
 	public Main() {
-		Game.init("Game", 1280, 720, false, "/Icon.png", this);
+		Game.init("Geometry Shift", 1280, 720, false, "/Icon.png", this);
+		
+		BufferedImage high = null;
+		
+		try {
+			high = ImageIO.read(new File("assets/high.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(high != null) {
+			highScore = high.getRGB(0, 0);
+		}
 		
 		Vector2f scale = new Vector2f(64, 64);
-		circle = SpriteLoader.loadSpriteData("res/sprites/Player_Circle", scale);
-		square = SpriteLoader.loadSpriteData("res/sprites/Player_Square", scale);
-		triangle = SpriteLoader.loadSpriteData("res/sprites/Player_Triangle", scale);
-		
+		circle = SpriteLoader.loadSpriteData("assets/sprites/Player_Circle", scale);
+		square = SpriteLoader.loadSpriteData("assets/sprites/Player_Square", scale);
+		triangle = SpriteLoader.loadSpriteData("assets/sprites/Player_Triangle", scale);
+
 		Vector2f shotScale = new Vector2f(32, 32);
-		shotCircle = SpriteLoader.loadSpriteData("res/sprites/Shot_Circle", shotScale);
-		shotSquare = SpriteLoader.loadSpriteData("res/sprites/Shot_Square", shotScale);
-		shotTriangle = SpriteLoader.loadSpriteData("res/sprites/Shot_Triangle", shotScale);
+		shotCircle = SpriteLoader.loadSpriteData("assets/sprites/Shot_Circle", shotScale);
+		shotSquare = SpriteLoader.loadSpriteData("assets/sprites/Shot_Square", shotScale);
+		shotTriangle = SpriteLoader.loadSpriteData("assets/sprites/Shot_Triangle", shotScale);
 		
 		shots = new ArrayList<Shot>();
 		enemies = new ArrayList<Enemy>();
@@ -454,27 +527,71 @@ public class Main implements Loop {
 		
 		loadExplosions();
 		
+		music = new Sound("music/Battle Meteor.wav");
+		die = new Sound("sfx/Die.wav");
+		shift = new Sound("sfx/Shift.wav");
+		shoot = new Sound("sfx/Shoot.wav");
+		
+		die.setVolume(  0.4f);
+		shift.setVolume(0.4f);	
+		shoot.setVolume(0.4f);
+		
+		music.setLooping(true);
+		music.play();
+		
+		bg = new Texture(getBG());
+		
+		title = new Texture("/images/Title.png");
+		
 		Game.start();
+	}
+	
+	public BufferedImage getBG() {
+		BufferedImage result = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_RGB);
+		
+		Graphics g = result.getGraphics();
+		
+		for(int i = 0;i < 300;i++) {
+			java.awt.Color c = new java.awt.Color(255, 255, rand.nextInt(128) + 128);
+			g.setColor(c);
+			int size = rand.nextInt(5) + 3;
+			g.fillOval(rand.nextInt(1280), rand.nextInt(720), size, size);
+		}
+		
+		g.dispose();
+		
+		return result;
 	}
 	
 	public void createUI () {
 		gameUI = new WindowUI();
 		layout = new DirectLayout(new Vector2f(1280, 720));
+		Texture logo = new Texture("/images/Logo.png");
+		
 		UIImage uits = new UIImage(triangle.render.ID, 	layout.getBounds(1280 - 180, 50, 30, 30));
 		UIImage uiss = new UIImage(square.render.ID, 	layout.getBounds(1280 - 130, 50, 30, 30));
 		UIImage uics = new UIImage(circle.render.ID, 	layout.getBounds(1280 - 80, 50, 30, 30));
+		UIImage logoUI = new UIImage(logo.ID, layout.getBounds(800, 300, 512, 512));
 		
 		gameUI.addObject(uits);
 		gameUI.addObject(uiss);
 		gameUI.addObject(uics);
 		
+		
 		menuUI = new WindowUI();
 		
-		Texture bb = new Texture("/images/ButtonBlue.png");
+		bb = new Texture("/images/ButtonBlue.png");
 		Button play = new Button(layout.getBounds(50, 600, 200, 60), "Play", 35, bb.ID);
 		play.addAction(new UIAction() {
 			public void mouseActionPreformed(UIMouseEvent m) {
 				sceen = 1;
+				
+				shots.clear();
+				enemies.clear();
+				
+				enemyTime = 3;
+				enemyWait = 0.5f;
+				score = 0;
 			}
 			
 			public void keyActionPreformed(UIKeyEvent k) {
@@ -486,7 +603,7 @@ public class Main implements Loop {
 			}
 		});
 		
-		Texture gb = new Texture("/images/ButtonGreen.png");
+		gb = new Texture("/images/ButtonGreen.png");
 		Button options = new Button(layout.getBounds(50, 500, 200, 60), "Options", 35, gb.ID);
 		options.addAction(new UIAction() {
 			public void mouseActionPreformed(UIMouseEvent m) {
@@ -502,7 +619,7 @@ public class Main implements Loop {
 			}
 		});
 		
-		Texture rb = new Texture("/images/ButtonRed.png");
+		rb = new Texture("/images/ButtonRed.png");
 		Button exit = new Button(layout.getBounds(50, 400, 200, 60), "Exit", 35, rb.ID);
 		exit.addAction(new UIAction() {
 			public void mouseActionPreformed(UIMouseEvent m) {
@@ -518,9 +635,35 @@ public class Main implements Loop {
 			}
 		});
 		
+		Button clear = new Button(layout.getBounds(50, 200, 200, 60), "Clear", 35, rb.ID);
+		clear.addAction(new UIAction() {
+			public void mouseActionPreformed(UIMouseEvent m) {
+				BufferedImage c = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+				c.setRGB(0, 0, 0);
+				
+				try {
+					ImageIO.write(c, "png", new File("assets/high.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				highScore = 0;
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		
+		menuUI.addObject(clear);
 		menuUI.addObject(play);
 		menuUI.addObject(options);
 		menuUI.addObject(exit);
+		menuUI.addObject(logoUI);
 		
 		loseUI = new WindowUI();
 		Button back = new Button(layout.getBounds(20, 20, 200, 60), "Back", 35, rb.ID);
@@ -540,6 +683,55 @@ public class Main implements Loop {
 		loseUI.addObject(back);
 		
 		optionsUI = new WindowUI();
+		
+		musicToggle = new Button(layout.getBounds(20, 400, 250, 60), "Music Toggle", 35, gb.ID);
+		musicToggle.addAction(new UIAction() {
+			
+			public void mouseActionPreformed(UIMouseEvent m) {
+				musicOn = !musicOn;
+				
+				if(musicOn) {
+					music.setVolume(1);
+					musicToggle.tex = gb.ID;
+				} else {
+					music.setVolume(0);
+					musicToggle.tex = rb.ID;
+				}
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		
+		sfxToggle = new Button(layout.getBounds(20, 300, 250, 60), "SFX Toggle", 35, gb.ID);
+		sfxToggle.addAction(new UIAction() {
+			
+			public void mouseActionPreformed(UIMouseEvent m) {
+				sfxOn = !sfxOn;
+				
+				if(sfxOn) {
+					sfxToggle.tex = gb.ID;
+				} else {
+					sfxToggle.tex = rb.ID;
+				}
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		
+		optionsUI.addObject(sfxToggle);
+		optionsUI.addObject(musicToggle);
 		optionsUI.addObject(back);
 	}
 	
@@ -600,5 +792,27 @@ public class Main implements Loop {
 	
 	public static void main(String[] args) {
 		new Main();
+		
+		BufferedImage high = null;
+		
+		try {
+			high = ImageIO.read(new File("assets/high.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(high != null) {
+			if(high.getRGB(0, 0) < highScore) {
+				high.setRGB(0, 0, highScore);
+				
+				try {
+					ImageIO.write(high, "png", new File("assets/high.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		System.exit(0);
 	}
 }

@@ -170,6 +170,6 @@ public class Window {
 		SoundManager.destroy();
 		Display.destroy();
 		frame.dispose();
-		System.exit(0);
+		//System.exit(0);
 	}
 }

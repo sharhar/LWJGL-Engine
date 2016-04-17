@@ -1,0 +1,2 @@
+EntityName=Player_Triangle
+PolyNum=1

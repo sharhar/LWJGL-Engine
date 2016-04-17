@@ -1,2 +1,0 @@
-EntityName=Shot_Triangle
-PolyNum=1

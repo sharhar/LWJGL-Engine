@@ -1,0 +1,2 @@
+EntityName=Shot_Square
+PolyNum=1
