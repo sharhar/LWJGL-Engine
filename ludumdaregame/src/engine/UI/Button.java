@@ -31,7 +31,7 @@ public class Button extends UIObject {
 	}
 
 	public void render() {
-		BasicRenderer.renderRect(bounds.x, bounds.y, bounds.w, bounds.h, 0, tex, shade);
+		BasicRenderer.renderRect(bounds.x + bounds.w/2, bounds.y + bounds.h/2, bounds.w, bounds.h, 0, tex, shade);
 		BasicRenderer.drawString(bounds.x + bounds.w / 2, bounds.y + (bounds.h - scale) / 2, text, scale,
 				TrueTypeFont.ALIGN_CENTER, new Color(0, 0, 0));
 	}

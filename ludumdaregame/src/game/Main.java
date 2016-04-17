@@ -7,19 +7,24 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.naming.TimeLimitExceededException;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.Game;
+import engine.UI.Button;
 import engine.UI.DirectLayout;
+import engine.UI.UIAction;
 import engine.UI.UIImage;
+import engine.UI.UIKeyEvent;
+import engine.UI.UIMouseEvent;
 import engine.UI.WindowUI;
 import engine.graphics.BasicRenderer;
+import engine.graphics.Color;
 import engine.graphics.MasterRenderer;
 import engine.graphics.Texture;
+import engine.graphics.font.TrueTypeFont;
 import engine.input.KeyInput;
 import engine.math.physics.Collider;
 import engine.objects.Sprite;
@@ -44,8 +49,12 @@ public class Main implements Loop {
 	
 	public static DirectLayout layout;
 	public static WindowUI gameUI;
+	public static WindowUI menuUI;
+	public static WindowUI loseUI;
+	public static WindowUI optionsUI;
 	
 	public static Sprite player;
+	public static int score = 0;
 	
 	public static Random rand = new Random();
 	
@@ -128,6 +137,7 @@ public class Main implements Loop {
 					if(!s.dead) {
 						if(Collider.spriteSpriteCol(s.sprite, sprite)) {
 							if(s.type != type) {
+								score++;
 								dead = true;
 							}
 							
@@ -166,6 +176,8 @@ public class Main implements Loop {
 	public static float expLen = 0.1f;
 	public static float expTime = 0;
 	public static float expSize = 0.2f;
+	
+	public static byte sceen = 0;
 	
 	public void startExplosion(Texture exp, SpriteData dat) {
 		exploding = true;
@@ -291,7 +303,9 @@ public class Main implements Loop {
 		
 		for(Enemy e:enemies) {
 			if(e.type != currentShape) {
-				
+				if(Collider.spriteSpriteCol(e.sprite, player)) {
+					sceen = 2;
+				}
 			}
 		}
 	}
@@ -394,14 +408,28 @@ public class Main implements Loop {
 	}
 	
 	public void run() {
-		playerControl();
-		update();
-		render();
-		
-		explosion();
-		
-		gameUI.render();
-		
+		if(sceen == 0) {
+			menuUI.tick();
+			menuUI.render();
+		} else if(sceen == 1) {
+			playerControl();
+			update();
+			render();
+			
+			explosion();
+			
+			gameUI.render();
+			
+			BasicRenderer.drawString(1280/2, 650, "Score: " + score, 50, TrueTypeFont.ALIGN_CENTER, Color.white);
+		} else if(sceen == 2) {
+			BasicRenderer.drawString(1280/2, 600, "Your score was: " + score , 72, TrueTypeFont.ALIGN_CENTER, Color.white);
+			
+			loseUI.tick();
+			loseUI.render();
+		} else if (sceen == 3) {
+			optionsUI.tick();
+			optionsUI.render();
+		}
 	}
 	
 	public Main() {
@@ -420,6 +448,16 @@ public class Main implements Loop {
 		shots = new ArrayList<Shot>();
 		enemies = new ArrayList<Enemy>();
 		
+		createUI();
+		
+		player = new Sprite(triangle, new Vector2f(640, 360));
+		
+		loadExplosions();
+		
+		Game.start();
+	}
+	
+	public void createUI () {
 		gameUI = new WindowUI();
 		layout = new DirectLayout(new Vector2f(1280, 720));
 		UIImage uits = new UIImage(triangle.render.ID, 	layout.getBounds(1280 - 180, 50, 30, 30));
@@ -430,11 +468,79 @@ public class Main implements Loop {
 		gameUI.addObject(uiss);
 		gameUI.addObject(uics);
 		
-		player = new Sprite(triangle, new Vector2f(640, 360));
+		menuUI = new WindowUI();
 		
-		loadExplosions();
+		Texture bb = new Texture("/images/ButtonBlue.png");
+		Button play = new Button(layout.getBounds(50, 600, 200, 60), "Play", 35, bb.ID);
+		play.addAction(new UIAction() {
+			public void mouseActionPreformed(UIMouseEvent m) {
+				sceen = 1;
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
 		
-		Game.start();
+		Texture gb = new Texture("/images/ButtonGreen.png");
+		Button options = new Button(layout.getBounds(50, 500, 200, 60), "Options", 35, gb.ID);
+		options.addAction(new UIAction() {
+			public void mouseActionPreformed(UIMouseEvent m) {
+				sceen = 3;
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		
+		Texture rb = new Texture("/images/ButtonRed.png");
+		Button exit = new Button(layout.getBounds(50, 400, 200, 60), "Exit", 35, rb.ID);
+		exit.addAction(new UIAction() {
+			public void mouseActionPreformed(UIMouseEvent m) {
+				Game.close();
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		
+		menuUI.addObject(play);
+		menuUI.addObject(options);
+		menuUI.addObject(exit);
+		
+		loseUI = new WindowUI();
+		Button back = new Button(layout.getBounds(20, 20, 200, 60), "Back", 35, rb.ID);
+		back.addAction(new UIAction() {
+			public void mouseActionPreformed(UIMouseEvent m) {
+				sceen = 0;
+			}
+			
+			public void keyActionPreformed(UIKeyEvent k) {
+				
+			}
+			
+			public void actionPreformed() {
+				
+			}
+		});
+		loseUI.addObject(back);
+		
+		optionsUI = new WindowUI();
+		optionsUI.addObject(back);
 	}
 	
 	public void loadExplosions() {
