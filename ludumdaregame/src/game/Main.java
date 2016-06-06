@@ -10,8 +10,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.Game;
@@ -28,6 +27,7 @@ import engine.graphics.MasterRenderer;
 import engine.graphics.Texture;
 import engine.graphics.font.TrueTypeFont;
 import engine.input.KeyInput;
+import engine.input.Mouse;
 import engine.math.physics.Collider;
 import engine.objects.Sprite;
 import engine.objects.SpriteData;
@@ -173,6 +173,8 @@ public class Main implements Loop {
 			}
 		}
 		
+		
+		
 		public boolean isDead() {
 			return dead;
 		}
@@ -257,11 +259,11 @@ public class Main implements Loop {
 	}
 	
 	public void playerControl() {
-		if(KeyInput.isKeyPressed(Keyboard.KEY_A)) {
+		if(KeyInput.isKeyPressed(GLFW.GLFW_KEY_A)) {
 			currentShape -= 1;
 		}
 		
-		if(KeyInput.isKeyPressed(Keyboard.KEY_D)) {
+		if(KeyInput.isKeyPressed(GLFW.GLFW_KEY_D)) {
 			currentShape += 1;
 		}
 		
@@ -300,7 +302,7 @@ public class Main implements Loop {
 		
 		
 		
-		Vector2f dif = new Vector2f(Mouse.getX() - player.pos.x, Mouse.getY() - player.pos.y);
+		Vector2f dif = new Vector2f(Mouse.pos.x - player.pos.x, Mouse.pos.y - player.pos.y);
 		float m = dif.y/dif.x;
 		float  off = 0;
 		if(dif.x < 0) {
@@ -316,7 +318,7 @@ public class Main implements Loop {
 		angle -= 90;
 		player.setR(angle);
 		
-		if(KeyInput.isKeyDown(Keyboard.KEY_W)) {
+		if(KeyInput.isKeyDown(GLFW.GLFW_KEY_W)) {
 			float speed = 2;
 			dif.normalise();
 			dif.scale(speed);

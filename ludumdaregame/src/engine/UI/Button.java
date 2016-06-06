@@ -1,11 +1,11 @@
 package engine.UI;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
 import engine.graphics.BasicRenderer;
 import engine.graphics.Color;
 import engine.graphics.font.TrueTypeFont;
+import engine.input.Mouse;
 import engine.math.Maths;
 
 public class Button extends UIObject {
@@ -37,7 +37,7 @@ public class Button extends UIObject {
 	}
 
 	public void tick() {
-		Vector2f vect = new Vector2f(Mouse.getX(), Mouse.getY());
+		Vector2f vect = new Vector2f(Mouse.pos.x, Mouse.pos.y);
 		if (Maths.inBounds(bounds, vect)) {
 			if (!mouseDown && Mouse.isButtonDown(0)) {
 				mouseEvent.state = 1;

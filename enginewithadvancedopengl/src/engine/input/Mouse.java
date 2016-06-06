@@ -3,7 +3,7 @@ package engine.input;
 import org.lwjgl.glfw.GLFW;
 
 import engine.Window;
-import engine.maths.Vector2f;
+import engine.utils.maths.Vector2f;
 
 public class Mouse {
 	

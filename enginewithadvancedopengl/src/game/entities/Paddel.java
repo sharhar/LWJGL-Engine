@@ -3,9 +3,9 @@ package game.entities;
 import engine.graphics.models.RectangleModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.textures.ModelTexture;
-import engine.maths.Vector2f;
 import engine.objects.CollisionShapeRect;
 import engine.objects.Entity;
+import engine.utils.maths.Vector2f;
 
 public class Paddel extends Entity{
 

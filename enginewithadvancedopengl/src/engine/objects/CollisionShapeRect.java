@@ -1,7 +1,7 @@
 package engine.objects;
 
-import engine.maths.Maths;
-import engine.maths.Vector2f;
+import engine.utils.maths.Maths;
+import engine.utils.maths.Vector2f;
 
 public class CollisionShapeRect extends CollisionShape{
 

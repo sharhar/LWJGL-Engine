@@ -6,24 +6,24 @@ import java.util.List;
 import java.util.Map;
 
 import engine.graphics.models.RawModel;
+import engine.graphics.renderers.EntityRenderer;
+import engine.graphics.shaders.EntityShader;
 import engine.objects.Entity;
-import engine.shaders.ShaderProgram;
-import engine.shaders.StaticShader;
 
 public class MasterRenderer {
 	
 	public static Map<String, Map<RawModel, Map<Integer, List<Entity>>>> scenes = new HashMap<String, Map<RawModel, Map<Integer, List<Entity>>>>();
 	
 	public static void renderScene(String name) {
-		StaticShader.basicShader.start();
-		Renderer.render(scenes.get(name));
+		EntityShader.inst.start();
+		EntityRenderer.render(scenes.get(name));	
 		ShaderProgram.stopShaders();
 		scenes.get(name).clear();
 	}
 	
 	public static void renderSceneNoClear(String name) {
-		StaticShader.basicShader.start();
-		Renderer.render(scenes.get(name));
+		EntityShader.inst.start();
+		EntityRenderer.render(scenes.get(name));
 		ShaderProgram.stopShaders();
 	}
 	

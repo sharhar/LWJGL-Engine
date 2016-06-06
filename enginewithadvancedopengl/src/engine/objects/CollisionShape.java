@@ -1,6 +1,6 @@
 package engine.objects;
 
-import engine.maths.Vector2f;
+import engine.utils.maths.Vector2f;
 
 public abstract class CollisionShape {
 	

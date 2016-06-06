@@ -435,20 +435,15 @@ public class TrueTypeFont {
              
             GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
              
-             
-             
-            GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D,
-                  internalFormat,
-                  width,
-                  height,
-                  format,
-                  GL11.GL_UNSIGNED_BYTE,
-                  byteBuffer);
+            GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+           
+            //GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, format, width, height, 0, internalFormat, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+            
             return textureId.get(0);
              
         } catch (Exception e) {
           e.printStackTrace();
-          System.exit(-1);
+          //System.exit(-1);
         }
          
         return -1;

@@ -7,6 +7,9 @@ import engine.objects.Sprite;
 import engine.time.Time;
 import engine.window.Loop;
 import engine.window.Window;
+
+import static org.lwjgl.glfw.GLFW.*;
+
 /**
  * This class is used to manage the game
  * @author Sharhar
@@ -58,7 +61,7 @@ public class Game{
 	 * This function closes the game
 	 */
 	public static void close() {
-		Window.closed = true;
+		glfwSetWindowShouldClose(Window.window, GLFW_TRUE);
 	}
 	
 	/**
@@ -69,7 +72,6 @@ public class Game{
 		while(!Window.isClosed()) {
 			Window.clear();
 			Time.tick();
-			KeyInput.update();
 			loop.run();
 			MasterRenderer.renderScene();
 			Window.update();

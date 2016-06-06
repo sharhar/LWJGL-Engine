@@ -7,20 +7,21 @@ import java.io.File;
 import engine.Game;
 import engine.Loop;
 import engine.Window;
-import engine.graphics.Renderer;
+import engine.graphics.MasterRenderer;
+import engine.graphics.ShaderProgram;
+import engine.graphics.renderers.EntityRenderer;
+import engine.graphics.shaders.EntityShader;
 import engine.graphics.text.FontType;
 import engine.graphics.text.Text;
 import engine.graphics.text.TextMaster;
 import engine.input.Keyboard;
-import engine.maths.CollisionMath;
-import engine.maths.Sync;
-import engine.maths.Vector2f;
-import engine.maths.Vector3f;
 import engine.objects.Entity;
 import engine.objects.Light;
-import engine.shaders.ShaderProgram;
-import engine.shaders.StaticShader;
 import engine.utils.Loader;
+import engine.utils.maths.CollisionMath;
+import engine.utils.maths.Sync;
+import engine.utils.maths.Vector2f;
+import engine.utils.maths.Vector3f;
 import game.entities.Paddel;
 
 public class Main implements Loop {
@@ -106,15 +107,23 @@ public class Main implements Loop {
 			bSpeed.y = 0;
 		}
 		
-		StaticShader.basicShader.start();
-		StaticShader.basicShader.loadLight(light);
+		EntityShader.inst.start();
+		EntityShader.inst.loadLight(light);
 		ShaderProgram.stopShaders();
 		
-		Renderer.addEntity(bg);
-		Renderer.addEntity(ball);
-		Renderer.addEntity(p1);
-		Renderer.addEntity(p2);
-		Renderer.renderScene();
+		MasterRenderer.addEntity(bg, "bg");
+		MasterRenderer.addEntity(ball, "game");
+		MasterRenderer.addEntity(p1, "game");
+		MasterRenderer.addEntity(p2, "game");
+		
+		MasterRenderer.renderScene("bg");
+		MasterRenderer.renderScene("game");
+		
+		//EntityRenderer.addEntity(bg);
+		//EntityRenderer.addEntity(ball);
+		//EntityRenderer.addEntity(p1);
+		//EntityRenderer.addEntity(p2);
+		//EntityRenderer.renderScene();
 		
 		Text tempText = new Text(p1Score + " | " + p2Score, 3f, arial, new Vector2f(0, 0.02f), 1f, true);
 		tempText.setColor(1, 1, 1);
@@ -136,13 +145,11 @@ public class Main implements Loop {
 	}
 
 	public Main() {
-		StaticShader.setLights(1);
-		
 		Window window = new Window("Game", 1280, 720, true, false);
 		game = new Game(window, this);
 		
 		TextMaster.init();
-		arial = new FontType(Loader.loadTexture("/niceArial.png"), new File("C:\\Users\\wiish\\Git\\LWJGL2DEngine\\enginewithadvancedopengl\\res\\niceArial.fnt"));
+		arial = new FontType(Loader.loadTexture("/niceArial.png"), new File("res/niceArial.fnt"));
 		
 		bg = new Entity("/BlackBG.png", new Vector2f(1280/2, 720/2), 0, new Vector2f(1280, 720), null);
 		ball = new Paddel(new Vector2f(300, 300), 0, new Vector2f(25, 25));

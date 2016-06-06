@@ -18,7 +18,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
-import engine.maths.Vector3f;
+import engine.utils.maths.Vector3f;
 
 public class Sound {
 	

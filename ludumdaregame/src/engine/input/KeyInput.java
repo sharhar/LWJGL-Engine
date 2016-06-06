@@ -1,54 +1,41 @@
 
 package engine.input;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
+
 /**
  * This class manages keyboard input
  * @author Sharhar
  */
 public class KeyInput {
-	
-	public static final int KEY_NUM = 256;
+	public static final int KEY_NUM = GLFW.GLFW_KEY_LAST+1;
 	public static boolean[] keys = new boolean[KEY_NUM];
 	public static boolean[] past_keys = new boolean[KEY_NUM];
 	
-	/**
-	 * This function updates the boolean arrays used to determine if a key was pressed
-	 */
-	public static void update() {
-		for(int i = 0;i < past_keys.length;i++) {
-			past_keys[i] = keys[i];
-		}
-		
-		for(int i = 0; i < keys.length;i ++) {
-			keys[i] = Keyboard.isKeyDown(i);
-		}
-	}
-	
-	/**
-	 * This function checks if a key on the keyboard was released
-	 * @param key the key to check
-	 * @return whether or not the key was released
-	 */
-	public static boolean isKeyReleased(int key) {
-		return !keys[key] && past_keys[key];
-	}
-	
-	/**
-	  * This function checks if a key on the keyboard was pressed
-	 * @param key the key to check
-	 * @return whether or not the key was pressed
-	 */
-	public static boolean isKeyPressed(int key) {
-		return keys[key] && !past_keys[key];
-	}
-	
-	/**
-	 * This function checks if a key is down
-	 * @param key the key to check
-	 * @return whether or not the key is pressed
-	 */
 	public static boolean isKeyDown(int key) {
 		return keys[key];
+	}
+	
+	public static boolean isKeyPressed(int key) {
+		boolean result = keys[key] && !past_keys[key];
+		if(result) {
+			past_keys[key] = true;
+		}
+		return result;
+	}
+	
+	public static void callback(int key, int action) {
+		past_keys[key] = keys[key];
+		keys[key] = GLFW.GLFW_PRESS == action || GLFW.GLFW_REPEAT == action;
+	}
+	
+	public static void init() {
+		for(int i = 0; i < keys.length;i++) {
+			keys[i] = false;
+		}
+		
+		for(int i = 0; i < past_keys.length;i++) {
+			past_keys[i] = false;
+		}
 	}
 }

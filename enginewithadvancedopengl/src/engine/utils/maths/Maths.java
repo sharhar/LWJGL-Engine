@@ -1,4 +1,4 @@
-package engine.maths;
+package engine.utils.maths;
 
 import engine.objects.CollisionShape;
 

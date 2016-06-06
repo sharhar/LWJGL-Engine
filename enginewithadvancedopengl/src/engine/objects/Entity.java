@@ -3,8 +3,8 @@ package engine.objects;
 import engine.graphics.models.RectangleModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.textures.ModelTexture;
-import engine.maths.Vector2f;
 import engine.utils.Loader;
+import engine.utils.maths.Vector2f;
 
 public class Entity {
 	

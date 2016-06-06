@@ -9,10 +9,10 @@ import java.util.TimerTask;
 
 import org.lwjgl.opengl.GL11;
 
-import engine.graphics.Renderer;
+import engine.graphics.renderers.EntityRenderer;
+import engine.graphics.shaders.EntityShader;
 import engine.input.Keyboard;
 import engine.input.Mouse;
-import engine.shaders.StaticShader;
 import engine.sound.SoundManager;
 import engine.utils.Loader;
 
@@ -45,7 +45,7 @@ public class Game {
 	
 	public Game(Window window, Loop loop) {
 		init(window, loop);
-		Renderer.init(window.getWidth(), window.getHeight());
+		EntityRenderer.init(window.getWidth(), window.getHeight());
 		SoundManager.init();
 		Keyboard.init();
 		Mouse.setWindow(window);
@@ -56,7 +56,7 @@ public class Game {
 	public void init(Window window, Loop loop) {
 		this.loop = loop;
 		this.window = window;
-		StaticShader.init();
+		EntityShader.init();
 	}
 	
 	public void printFPS(boolean pf) {
@@ -105,7 +105,7 @@ public class Game {
 		loop.stop();
 		SoundManager.destroy();
 		fpsCounter.cancel();
-		StaticShader.basicShader.cleanUp();
+		EntityShader.inst.cleanUp();
 		Loader.cleanUp();
 		window.close();
 	}

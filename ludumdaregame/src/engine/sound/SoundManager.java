@@ -3,8 +3,9 @@ package engine.sound;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALContext;
+import org.lwjgl.openal.ALDevice;
 
 /**
  * This class is used to manage the sounds in the game
@@ -14,14 +15,21 @@ public class SoundManager {
 	
 	private static List<Sound> sounds = new ArrayList<Sound>();
 	
+	public static ALContext context;
+	public static ALDevice device;
+	public static ALCCapabilities capabilities;
+	
 	/**
 	 * This function initializes the SoundManager 
 	 */
 	public static void init() {
-		try {
-			AL.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
+		context = ALContext.create();
+		device = context.getDevice();
+		context.makeCurrent();
+		
+		ALCCapabilities capabilities = device.getCapabilities();
+		if(!capabilities.OpenALC10) {
+			throw new RuntimeException("OpenAL Context Creation failed");
 		}
 	}
 	
@@ -47,6 +55,7 @@ public class SoundManager {
 			s.destroy();
 		}
 		
-		AL.destroy();
+		device.destroy();
+		context.destroy();
 	}
 }

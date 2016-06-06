@@ -1,12 +1,13 @@
-package engine.shaders;
+package engine.graphics.shaders;
 
 import java.util.HashMap;
 
+import engine.graphics.ShaderProgram;
 import engine.objects.Light;
 
-public class StaticShader extends ShaderProgram{
+public class EntityShader extends ShaderProgram{
 	
-	public static StaticShader basicShader = null;
+	public static EntityShader inst = null;
 	public static int amountOfLights = 0;
 	private static HashMap<String, String> consts = new HashMap<String, String>();
 	private static boolean lightInited = false;
@@ -16,21 +17,21 @@ public class StaticShader extends ShaderProgram{
 		if(!lightInited) {
 			setLights(1, false);
 		}
-		basicShader = new StaticShader();
+		inst = new EntityShader();
 		pushAllConstants();
-		basicShader.compile(VERTEX_FILE, FRAGMENT_FILE);
+		inst.compile(VERTEX_FILE, FRAGMENT_FILE);
 	}
 	
-	private static final String VERTEX_FILE = "shaders/basicShader.vert";
-	private static final String FRAGMENT_FILE = "shaders/basicShader.frag";
+	private static final String VERTEX_FILE = "shaders/entityShader.vert";
+	private static final String FRAGMENT_FILE = "shaders/entityShader.frag";
 
-	public StaticShader() {
+	public EntityShader() {
 		super();
 	}
 	
 	public static void pushAllConstants() {
 		for(String name:consts.keySet()) {
-			basicShader.constants.put(name, consts.get(name));
+			inst.constants.put(name, consts.get(name));
 		}
 	}
 	
@@ -72,11 +73,9 @@ public class StaticShader extends ShaderProgram{
 			super.getUniformLocation("lightRange[" + i + "]");
 		}
 		
-		//lightRange
-		
 		super.getUniformLocation("lightsOn");
 		
-		basicShader.start();
+		inst.start();
 		super.loadBool(uniforms.get("lightsOn"), lightsOn);
 		stopShaders();
 	}

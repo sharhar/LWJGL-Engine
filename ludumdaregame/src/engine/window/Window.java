@@ -1,103 +1,108 @@
 package engine.window;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.awt.Canvas;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-
+import engine.input.KeyInput;
+import engine.input.Mouse;
 import engine.sound.SoundManager;
 
-/**
- * This class is used to manage the window
- * @author Sharhar
- */
 public class Window {
 	
-	public static JFrame frame;
-	public static Canvas canvas;
+	private static GLFWErrorCallback errorCallback;
+	private static GLFWKeyCallback keyCallback;
+	private static GLFWWindowSizeCallback sizeCallback;
+	private static GLFWCursorPosCallback cursorPosCallback;
+	private static GLFWMouseButtonCallback mouseButtonCallback;
+	private static GLFWScrollCallback scrollCallback;
 	
-	public static boolean closed = false;
+	public static long window;
+
+	private static int WIDTH;
+	private static int HEIGHT;
+	
 	public static boolean resized = false;
 	
-	/**
-	 * This function is used to create a window
-	 * @param title title of the window
-	 * @param width width of the window
-	 * @param height height of the window
-	 */
 	public static void create(String title, int width, int height) {
 		create(title,width,height,false,null);
 	}
 	
-	/**
-	 * This function is used to create a window
-	 * @param title title of the window
-	 * @param width width of the window
-	 * @param height height of the window
-	 * @param resizeable whether or not the window is resizable
-	 * @param iconPath the path to the icon
-	 */
 	public static void create(String title, int width, int height, boolean resizeable, String iconPath) {
-		try {
-			frame = new JFrame();
-			frame.setVisible(false);
-			
-			canvas = new Canvas();
-			canvas.setSize(width,height);
-			
-			Display.setParent(canvas);
-			
-			frame.add(canvas);
-			
-			frame.pack();
-			frame.setVisible(true);
-			canvas.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setLocationRelativeTo(null);
-			
-			try {
-				frame.setIconImage(ImageIO.read(Window.class.getResourceAsStream(iconPath)));
-			} catch (Exception e) {
-				System.out.println("Could not load Icon!");
-			}
-			
-			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		    frame.addWindowListener(new WindowAdapter() {
-		        public void windowClosing(WindowEvent event) {
-		            closed = true;
-		        }
-		    });
-		    
-		    frame.addComponentListener(new ComponentListener() {
-		    	public void componentResized(ComponentEvent e) {
-		            resized = true;       
-		        }
-				public void componentHidden(ComponentEvent arg0) {}
-				public void componentMoved(ComponentEvent arg0) {}
-				public void componentShown(ComponentEvent arg0) {}
-		    });
-			
-			frame.setTitle(title);
-			Display.create();
-			frame.setResizable(resizeable);
-			
-			Mouse.create();
-			Keyboard.create();
-		} catch (LWJGLException e) {
-			System.err.println("Could not create window!");
-			e.printStackTrace();
+		WIDTH = width;
+		HEIGHT = height;
+
+		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+
+		if (glfwInit() != GLFW_TRUE) {
+			throw new IllegalStateException("Unable to initialize GLFW");
 		}
+
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		if (resizeable) {
+			glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		} else {
+			glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		}
+
+		window = glfwCreateWindow(width, height, title, NULL, NULL);
+		if (window == NULL) {
+			throw new RuntimeException("Failed to create the GLFW window");
+		}
+
+		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				KeyInput.callback(key, action);
+			}
+		});
+
+		glfwSetWindowSizeCallback(window, sizeCallback = new GLFWWindowSizeCallback() {
+			public void invoke(long window, int w, int h) {
+				resized = true;
+				WIDTH = w;
+				HEIGHT = h;
+			}
+		});
+
+		glfwSetCursorPosCallback(window, cursorPosCallback = new GLFWCursorPosCallback() {
+			public void invoke(long window, double xpos, double ypos) {
+				Mouse.posCallback((float) xpos, HEIGHT - ((float) ypos));
+			}
+		});
+
+		glfwSetMouseButtonCallback(window, mouseButtonCallback = new GLFWMouseButtonCallback() {
+			public void invoke(long window, int button, int action, int mods) {
+				Mouse.buttonCallback(button, action);
+			}
+		});
+
+		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
+			public void invoke(long window, double xoffset, double yoffset) {
+				Mouse.scrollCallback((float) xoffset, (float) yoffset);
+			}
+		});
+
+		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+
+		glfwMakeContextCurrent(window);
+		
+		glfwSwapInterval(1);
+			
+		glfwShowWindow(window);
+
+		GL.createCapabilities();
 		
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_PROJECTION);
@@ -124,15 +129,7 @@ public class Window {
 	 * @return the window's width
 	 */
 	public static int getWidth() {
-		return Display.getWidth();
-	}
-	
-	/**
-	 * This function returns the window's title
-	 * @return the window's title
-	 */
-	public static String getTitle() {
-		return Display.getTitle();
+		return WIDTH;
 	}
 	
 	/**
@@ -140,7 +137,7 @@ public class Window {
 	 * @return the window's height
 	 */
 	public static int getHeight() {
-		return Display.getHeight();
+		return HEIGHT;
 	}
 	
 	/**
@@ -148,19 +145,15 @@ public class Window {
 	 * @return whether or not the window was closed
 	 */
 	public static boolean isClosed() {
-		return closed;
+		return glfwWindowShouldClose(window) == GLFW_TRUE;
 	}
 	
 	/**
 	 * This function updates the display
 	 */
 	public static void update() {
-		if(resized) {
-			glViewport(0, 0, Display.getWidth(), Display.getHeight());
-			resized = false;
-		}
-		Display.update();
-		Display.sync(60);
+		glfwPollEvents();
+		glfwSwapBuffers(window);
 	}
 	
 	/**
@@ -168,8 +161,16 @@ public class Window {
 	 */
 	public static void destroy() {
 		SoundManager.destroy();
-		Display.destroy();
-		frame.dispose();
-		//System.exit(0);
+		try {
+			glfwDestroyWindow(window);
+			keyCallback.release();
+			sizeCallback.release();
+			cursorPosCallback.release();
+			mouseButtonCallback.release();
+			scrollCallback.release();
+		} finally {
+			glfwTerminate();
+			errorCallback.release();
+		}
 	}
 }

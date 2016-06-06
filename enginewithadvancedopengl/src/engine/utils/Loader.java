@@ -31,6 +31,14 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public static RawModel loadToVAORaw(float[] positions, float[] texCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, positions);
+		storeDataInAttributeList(1, texCoords);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/2);
+	}
+	
 	public static RawModel loadToVAO(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
@@ -82,6 +90,38 @@ public class Loader {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+	
+	public static int loadTexture(BufferedImage image) {
+		int width = 0;
+		int height = 0;
+		int[] pixels = null;
+		
+		width = image.getWidth();
+		height = image.getHeight();
+		pixels = new int[width*height];
+		image.getRGB(0,0,width,height,pixels,0,width);
+		
+		
+		int[] data = new int[width*height];
+		for(int i = 0;i < width*height;i++) {
+			int a = (pixels[i] & 0xff000000) >> 24;
+			int r = (pixels[i] & 0xff0000) >> 16;
+			int g = (pixels[i] & 0xff00) >> 8;
+			int b = (pixels[i] & 0xff);
+			
+			data[i] = a << 24 | b << 16 | g << 8 | r;
+		}
+		
+		int tex = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		IntBuffer buffer = ByteBuffer.allocateDirect(data.length << 2).order(ByteOrder.nativeOrder()).asIntBuffer();
+		buffer.put(data).flip();
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D,0,GL11.GL_RGBA,width,height,0,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		return tex;
 	}
 	
 	public static int loadTexture(String path) {
